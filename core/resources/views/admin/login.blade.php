@@ -4,14 +4,14 @@
     <meta charset="utf-8">
   	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <title>{{$bs->website_title}}</title>
-  	<link rel="icon" href="{{asset('assets/front/img/'.$bs->favicon)}}">
+  	<link rel="icon" href="{{asset('assets/front/img/favicon.jpg')}}">
     <link rel="stylesheet" href="{{asset('assets/admin/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/admin/css/login.css')}}">
   </head>
   <body>
     <div class="login-page">
       <div class="text-center mb-4">
-        <img class="login-logo" src="{{asset('assets/front/img/'.$bs->logo)}}" alt="">
+        <img class="login-logo" src="{{asset('assets/front/img/logo.png')}}" alt="">
       </div>
       <div class="form">
         @if (session()->has('alert'))
@@ -31,7 +31,6 @@
           @endif
           <button type="submit">login</button>
         </form>
-        <a class="forget-link" href="{{route('admin.forget.form')}}">Forgot Password / Username ?</a>
       </div>
     </div>
 

@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($member->language) && $member->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Edit Member</h4>
@@ -44,7 +28,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Edit Member</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.member.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.member.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -104,22 +88,22 @@
                 </div>
                 <div class="form-group">
                   <label for="">Facebook</label>
-                  <input type="text" class="form-control ltr" name="facebook" value="{{$member->facebook}}" placeholder="Enter facebook url">
+                  <input type="text" class="form-control" name="facebook" value="{{$member->facebook}}" placeholder="Enter facebook url">
                   <p id="errfacebook" class="mb-0 text-danger em"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Twitter</label>
-                  <input type="text" class="form-control ltr" name="twitter" value="{{$member->twitter}}" placeholder="Enter twitter url">
+                  <input type="text" class="form-control" name="twitter" value="{{$member->twitter}}" placeholder="Enter twitter url">
                   <p id="errtwitter" class="mb-0 text-danger em"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Instagram</label>
-                  <input type="text" class="form-control ltr" name="instagram" value="{{$member->instagram}}" placeholder="Enter instagram url">
+                  <input type="text" class="form-control" name="instagram" value="{{$member->instagram}}" placeholder="Enter instagram url">
                   <p id="errinstagram" class="mb-0 text-danger em"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Linkedin</label>
-                  <input type="text" class="form-control ltr" name="linkedin" value="{{$member->linkedin}}" placeholder="Enter linkedin url">
+                  <input type="text" class="form-control" name="linkedin" value="{{$member->linkedin}}" placeholder="Enter linkedin url">
                   <p id="errlinkedin" class="mb-0 text-danger em"></p>
                 </div>
               </form>

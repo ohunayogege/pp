@@ -27,32 +27,18 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="card-title">Update Logo</div>
-                </div>
-                <div class="col-lg-2">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-            </div>
+          <div class="card-title">Update Logo</div>
         </div>
         <div class="card-body pt-5 pb-4">
           <div class="row">
             <div class="col-lg-6 offset-lg-3">
-              <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.logo.update', $lang_id)}}" method="POST">
+              <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.logo.update')}}" method="POST">
                 <div class="form-row">
                   <div class="col-md-12 d-md-block d-sm-none mb-3">
-                    @if (!empty($abs->logo))
-                        <img src="{{asset('assets/front/img/'.$abs->logo)}}" alt="..." class="img-thumbnail">
+                    @if (file_exists('assets/front/img/logo.png'))
+                      <img src="{{asset('assets/front/img/logo.png?'.time())}}" alt="..." class="img-thumbnail">
                     @else
-                        <img src="{{asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
+                      <img src="{{asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
                     @endif
                   </div>
                   <div class="col-sm-12">

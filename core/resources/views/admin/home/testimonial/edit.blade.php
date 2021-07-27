@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($testimonial->language) && $testimonial->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Edit Testimonial</h4>
@@ -44,7 +28,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Edit Testimonial</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.testimonial.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.testimonial.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -107,12 +91,6 @@
                   <label for="">Rank **</label>
                   <input type="text" class="form-control" name="rank" value="{{$testimonial->rank}}" placeholder="Enter rank">
                   <p id="errrank" class="mb-0 text-danger em"></p>
-                </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="{{$testimonial->serial_number}}" placeholder="Enter Serial Number">
-                  <p id="errserial_number" class="mb-0 text-danger em"></p>
-                  <p class="text-warning"><small>The higher the serial number is, the later the testimonial will be shown.</small></p>
                 </div>
               </form>
             </div>

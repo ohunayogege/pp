@@ -51,7 +51,6 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-       
 
         'admin-api' => [
             'driver' => 'token',
@@ -91,7 +90,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Admin::class,
         ],
-        
     ],
 
     /*

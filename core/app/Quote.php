@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quote extends Model
 {
-    protected $fillable = ['id', 'name', 'email', 'fields', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'name', 'email', 'phone', 'country', 'budget', 'skype_whatsapp', 'services', 'description', 'nda', 'created_at', 'updated_at'];
 }

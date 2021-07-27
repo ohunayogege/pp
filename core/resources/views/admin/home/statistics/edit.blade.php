@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($statistic->language) && $statistic->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Statistics Section</h4>
@@ -45,12 +29,12 @@
         <form id="statisticForm" action="{{route('admin.statistics.update')}}" method="post">
           <div class="card-header">
             <div class="card-title d-inline-block">Edit Statistic</div>
-            <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.statistics.index') . '?language=' . request()->input('language')}}">
-                <span class="btn-label">
-                    <i class="fas fa-backward" style="font-size: 12px;"></i>
-                </span>
-                Back
-            </a>
+            <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.statistics.index')}}">
+							<span class="btn-label">
+								<i class="fas fa-backward" style="font-size: 12px;"></i>
+							</span>
+							Back
+						</a>
           </div>
           <div class="card-body pt-5 pb-5">
             <div class="row">
@@ -83,7 +67,7 @@
                 </div>
                 <div class="form-group">
                    <label for="">Quantity **</label>
-                   <div class="input-group @if(!empty($selLang) && $selLang->rtl == 1) rtl @endif">
+                   <div class="input-group">
                       <input type="text" class="form-control" name="quantity" value="{{$statistic->quantity}}" placeholder="Enter Quantity" aria-describedby="basic-addon2">
                       <div class="input-group-append">
                          <span class="input-group-text" id="basic-addon2">+</span>
@@ -92,14 +76,6 @@
                    @if ($errors->has('quantity'))
                      <p class="mb-0 text-danger">{{$errors->first('quantity')}}</p>
                    @endif
-                </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="{{$statistic->serial_number}}" placeholder="Enter Serial Number">
-                  @if ($errors->has('serial_number'))
-                    <p class="mb-0 text-danger">{{$errors->first('serial_number')}}</p>
-                  @endif
-                  <p class="text-warning"><small>The higher the serial number is, the later the statistic will be shown.</small></p>
                 </div>
               </div>
             </div>

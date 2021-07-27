@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($slider->language) && $slider->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Edit Slider</h4>
@@ -50,7 +34,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Edit Slider</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.slider.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.slider.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -59,7 +43,7 @@
         </div>
         <div class="card-body pt-5 pb-5">
           <div class="row">
-            <div class="col-lg-8 offset-lg-2">
+            <div class="col-lg-6 offset-lg-3">
               <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.slider.uploadUpdate', $slider->id)}}" method="POST">
                 @csrf
                 <div class="form-row px-2">
@@ -98,107 +82,25 @@
               <form id="ajaxForm" class="" action="{{route('admin.slider.update')}}" method="post">
                 @csrf
                 <input type="hidden" name="slider_id" value="{{$slider->id}}">
-
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                          <label for="">Title </label>
-                          <input type="text" class="form-control" name="title" value="{{$slider->title}}" placeholder="Enter Title">
-                          <p id="errtitle" class="text-danger mb-0 em"></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                          <label for="">Title Font Size **</label>
-                          <input type="number" class="form-control ltr" name="title_font_size" value="{{$slider->title_font_size}}">
-                          <p id="errtitle_font_size" class="em text-danger mb-0"></p>
-                        </div>
-                    </div>
+                <div class="form-group">
+                  <label for="">Title **</label>
+                  <input type="text" class="form-control" name="title" value="{{$slider->title}}" placeholder="Enter Title">
+                  <p id="errtitle" class="text-danger mb-0 em"></p>
                 </div>
-
-
-                @if (getVersion($be->theme_version) == 'gym' || getVersion($be->theme_version) == 'car' || getVersion($be->theme_version) == 'cleaning')
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Bold Text </label>
-                                <input type="text" class="form-control" name="bold_text" value="{{$slider->bold_text}}" placeholder="Enter Bold Text">
-                                <p id="errbold_text" class="mb-0 text-danger em"></p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Bold Text Font Size **</label>
-                                <input type="number" class="form-control ltr" name="bold_text_font_size" value="{{$slider->bold_text_font_size}}">
-                                <p id="errbold_text_font_size" class="em text-danger mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-
-
-                @if (getVersion($be->theme_version) == 'cleaning')
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                <label for="">Bold Text Color **</label>
-                                <input type="text" class="form-control jscolor" name="bold_text_color" value="{{$slider->bold_text_color}}">
-                                <p id="errbold_text_color" class="em text-danger mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-
-                @if (getVersion($be->theme_version) != 'cleaning')
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                            <label for="">Text </label>
-                            <input type="text" class="form-control" name="text" value="{{$slider->text}}" placeholder="Enter Text">
-                            <p id="errtext" class="text-danger mb-0 em"></p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Text Font Size **</label>
-                                <input type="number" class="form-control ltr" name="text_font_size" value="{{$slider->text_font_size}}">
-                                <p id="errtext_font_size" class="em text-danger mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                          <label for="">Button Text </label>
-                          <input type="text" class="form-control" name="button_text" value="{{$slider->button_text}}" placeholder="Enter Button Text">
-                          <p id="errbutton_text" class="text-danger mb-0 em"></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="">Button Text Font Size **</label>
-                            <input type="number" class="form-control ltr" name="button_text_font_size" value="{{$slider->button_text_font_size}}">
-                            <p id="errbutton_text_font_size" class="em text-danger mb-0"></p>
-                        </div>
-                    </div>
+                <div class="form-group">
+                  <label for="">Text **</label>
+                  <input type="text" class="form-control" name="text" value="{{$slider->text}}" placeholder="Enter Text">
+                  <p id="errtext" class="text-danger mb-0 em"></p>
                 </div>
-
-
+                <div class="form-group">
+                  <label for="">Button Text **</label>
+                  <input type="text" class="form-control" name="button_text" value="{{$slider->button_text}}" placeholder="Enter Button Text">
+                  <p id="errbutton_text" class="text-danger mb-0 em"></p>
+                </div>
                 <div class="form-group">
                   <label for="">Button URL **</label>
-                  <input type="text" class="form-control ltr" name="button_url" value="{{$slider->button_url}}" placeholder="Enter Button URL">
+                  <input type="text" class="form-control" name="button_url" value="{{$slider->button_url}}" placeholder="Enter Button URL">
                   <p id="errbutton_url" class="text-danger mb-0 em"></p>
-                </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="{{$slider->serial_number}}" placeholder="Enter Serial Number">
-                  <p id="errserial_number" class="mb-0 text-danger em"></p>
-                  <p class="text-warning"><small>The higher the serial number is, the later the slider will be shown.</small></p>
                 </div>
               </form>
             </div>

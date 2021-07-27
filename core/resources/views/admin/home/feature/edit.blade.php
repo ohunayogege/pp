@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($feature->language) && $feature->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Features</h4>
@@ -45,7 +29,7 @@
         <form action="{{route('admin.feature.update')}}" method="post">
           <div class="card-header">
             <div class="card-title d-inline-block">Edit Feature</div>
-            <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.feature.index') . '?language=' . request()->input('language')}}">
+            <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.feature.index')}}">
 							<span class="btn-label">
 								<i class="fas fa-backward" style="font-size: 12px;"></i>
 							</span>
@@ -80,23 +64,6 @@
                     @if ($errors->has('title'))
                       <p class="mb-0 text-danger">{{$errors->first('title')}}</p>
                     @endif
-                  </div>
-                  @if (getVersion($be->theme_version) != 'car')
-                    <div class="form-group">
-                        <label>Color **</label>
-                        <input class="jscolor form-control ltr" name="color" value="{{$feature->color}}">
-                        @if ($errors->has('color'))
-                            <p class="mb-0 text-danger">{{$errors->first('color')}}</p>
-                        @endif
-                    </div>
-                  @endif
-                  <div class="form-group">
-                    <label for="">Serial Number **</label>
-                    <input type="number" class="form-control ltr" name="serial_number" value="{{$feature->serial_number}}" placeholder="Enter Serial Number">
-                    @if ($errors->has('serial_number'))
-                      <p class="mb-0 text-danger">{{$errors->first('serial_number')}}</p>
-                    @endif
-                    <p class="text-warning"><small>The higher the serial number is, the later the feature will be shown.</small></p>
                   </div>
               </div>
             </div>

@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($portfolio->language) && $portfolio->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Edit Portfolio</h4>
@@ -44,7 +28,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Edit Portfolio</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.portfolio.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.portfolio.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -174,10 +158,10 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-lg-6">
+                  <div class="col-lg-12">
                     <div class="form-group">
                       <label for="">Status **</label>
-                      <select class="form-control ltr" name="status">
+                      <select class="form-control" name="status">
                         <option value="" selected disabled>Select a status</option>
                         <option value="In Progress" {{$portfolio->status == 'In Progress' ? 'selected' : ''}}>In Progress</option>
                         <option value="Completed" {{$portfolio->status == 'Completed' ? 'selected' : ''}}>Completed</option>
@@ -185,31 +169,15 @@
                       <p id="errstatus" class="mb-0 text-danger em"></p>
                     </div>
                   </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Serial Number **</label>
-                        <input type="number" class="form-control ltr" name="serial_number" value="{{$portfolio->serial_number}}" placeholder="Enter Serial Number">
-                        <p id="errserial_number" class="mb-0 text-danger em"></p>
-                        <p class="text-warning mb-0"><small>The higher the serial number is, the later the portfolio will be shown.</small></p>
-                    </div>
-                  </div>
                 </div>
                 <div class="row">
                   <div class="col-lg-12">
                     <div class="form-group">
                       <label for="">Content **</label>
-                      <textarea class="form-control summernote" name="content" rows="8" placeholder="Enter content" data-height="300">{{replaceBaseUrl($portfolio->content)}}</textarea>
+                      <textarea class="form-control nic-edit" id="nicContent" name="content" rows="8" placeholder="Enter content">{{$portfolio->content}}</textarea>
                       <p id="errcontent" class="mb-0 text-danger em"></p>
                     </div>
                   </div>
-                </div>
-                <div class="form-group">
-                   <label>Meta Keywords</label>
-                   <input class="form-control" name="meta_keywords" value="{{$portfolio->meta_keywords}}" placeholder="Enter meta keywords" data-role="tagsinput">
-                </div>
-                <div class="form-group">
-                   <label>Meta Description</label>
-                   <textarea class="form-control" name="meta_description" rows="5" placeholder="Enter meta description">{{$portfolio->meta_description}}</textarea>
                 </div>
               </form>
             </div>
@@ -328,7 +296,6 @@
   });
 
   function rmvdbimg(indb) {
-    $(".request-loader").addClass("show");
     $.ajax({
       url: "{{route('admin.portfolio.sliderrmv')}}",
       type: 'POST',
@@ -337,7 +304,6 @@
         fileid: indb
       },
       success: function(data) {
-        $(".request-loader").removeClass("show");
         $("#trdb"+indb).remove();
         var content = {};
 

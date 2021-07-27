@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($abs->language) && $abs->language->rtl == 1)
-@section('styles')
-<style>
-    form:not(.modal-form) input,
-    form:not(.modal-form)  textarea,
-    form:not(.modal-form)  select {
-        direction: rtl;
-    }
-    form:not(.modal-form)  .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Approach Section</h4>
@@ -43,30 +27,16 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="card-title">Title & Subtitle</div>
-                </div>
-                <div class="col-lg-2">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-            </div>
+          <div class="card-title">Title & Subtitle</div>
         </div>
-        <form class="" action="{{route('admin.approach.update', $lang_id)}}" method="post">
+        <form class="" action="{{route('admin.approach.update')}}" method="post">
           @csrf
           <div class="card-body">
             <div class="row">
               <div class="col-lg-3">
                 <div class="form-group">
                   <label>Title **</label>
-                  <input class="form-control" name="approach_section_title" value="{{$abs->approach_title}}" placeholder="Enter Title">
+                  <input class="form-control" name="approach_section_title" value="{{$bs->approach_title}}" placeholder="Enter Title">
                   @if ($errors->has('approach_section_title'))
                     <p class="mb-0 text-danger">{{$errors->first('approach_section_title')}}</p>
                   @endif
@@ -75,7 +45,7 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label>Subtitle **</label>
-                  <input class="form-control" name="approach_section_subtitle" value="{{$abs->approach_subtitle}}" placeholder="Enter Subtitle">
+                  <input class="form-control" name="approach_section_subtitle" value="{{$bs->approach_subtitle}}" placeholder="Enter Subtitle">
                   @if ($errors->has('approach_section_subtitle'))
                     <p class="mb-0 text-danger">{{$errors->first('approach_section_subtitle')}}</p>
                   @endif
@@ -83,8 +53,8 @@
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label>Button Text</label>
-                  <input class="form-control" name="approach_section_button_text" value="{{$abs->approach_button_text}}" placeholder="Enter Button Text">
+                  <label>Button Text **</label>
+                  <input class="form-control" name="approach_section_button_text" value="{{$bs->approach_button_text}}" placeholder="Enter Button Text">
                   @if ($errors->has('approach_section_button_text'))
                     <p class="mb-0 text-danger">{{$errors->first('approach_section_button_text')}}</p>
                   @endif
@@ -92,8 +62,8 @@
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label>Button URL</label>
-                  <input class="form-control ltr" name="approach_section_button_url" value="{{$abs->approach_button_url}}" placeholder="Enter Button URL">
+                  <label>Button URL **</label>
+                  <input class="form-control" name="approach_section_button_url" value="{{$bs->approach_button_url}}" placeholder="Enter Button URL">
                   @if ($errors->has('approach_section_button_url'))
                     <p class="mb-0 text-danger">{{$errors->first('approach_section_button_url')}}</p>
                   @endif
@@ -131,7 +101,6 @@
                         <th scope="col">#</th>
                         <th scope="col">Icon</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Serial Number</th>
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -140,10 +109,9 @@
                         <tr>
                           <td>{{$loop->iteration}}</td>
                           <td><i class="{{ $point->icon }}"></i></td>
-                          <td>{{convertUtf8($point->title)}}</td>
-                          <td>{{$point->serial_number}}</td>
+                          <td>{{$point->title}}</td>
                           <td>
-                            <a class="btn btn-secondary btn-sm" href="{{route('admin.approach.point.edit', $point->id) . '?language=' . request()->input('language')}}">
+                            <a class="btn btn-secondary btn-sm" href="{{route('admin.approach.point.edit', $point->id)}}">
                             <span class="btn-label">
                               <i class="fas fa-edit"></i>
                             </span>
@@ -181,43 +149,9 @@
 @section('scripts')
   <script>
     $(document).ready(function() {
-        $('.icp').on('iconpickerSelected', function(event){
-            $("#inputIcon").val($(".iconpicker-component").find('i').attr('class'));
-        });
-
-        // make input fields RTL
-        $("select[name='language_id']").on('change', function() {
-            $(".request-loader").addClass("show");
-            let url = "{{url('/')}}/admin/rtlcheck/" + $(this).val();
-            console.log(url);
-            $.get(url, function(data) {
-                $(".request-loader").removeClass("show");
-                if (data == 1) {
-                    $("form.modal-form input").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form.modal-form select").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form.modal-form textarea").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form.modal-form .nicEdit-main").each(function() {
-                        $(this).addClass('rtl text-right');
-                    });
-
-                } else {
-                    $("form.modal-form input, form.modal-form select, form.modal-form textarea").removeClass('rtl');
-                    $("form.modal-form .nicEdit-main").removeClass('rtl text-right');
-                }
-            })
-        });
+      $('.icp').on('iconpickerSelected', function(event){
+        $("#inputIcon").val($(".iconpicker-component").find('i').attr('class'));
+      });
     });
   </script>
 @endsection

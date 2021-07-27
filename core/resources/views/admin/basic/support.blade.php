@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($abs->language) && $abs->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    form .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Support Informations</h4>
@@ -42,24 +26,9 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.support.update', $lang_id)}}" method="POST">
+        <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.support.update')}}" method="POST">
           <div class="card-header">
-              <div class="row">
-                  <div class="col-lg-10">
-                      <div class="card-title">Change Informations</div>
-                  </div>
-                  <div class="col-lg-2">
-                      @if (!empty($langs))
-                          <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                              <option value="" selected disabled>Select a Language</option>
-                              <option value="" {{empty(request()->input('language')) ? 'selected' : ''}}>Default</option>
-                              @foreach ($langs as $lang)
-                                  <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                              @endforeach
-                          </select>
-                      @endif
-                  </div>
-              </div>
+            <div class="card-title">Change Informations</div>
           </div>
           <div class="card-body pt-5 pb-5">
             <div class="row">
@@ -67,14 +36,14 @@
                 @csrf
                 <div class="form-group">
                   <label>Email **</label>
-                  <input class="form-control ltr" name="support_email" value="{{$abs->support_email}}" placeholder="Email">
+                  <input class="form-control" name="support_email" value="{{$bs->support_email}}" placeholder="Email">
                   @if ($errors->has('support_email'))
                     <p class="mb-0 text-danger">{{$errors->first('support_email')}}</p>
                   @endif
                 </div>
                 <div class="form-group">
                   <label>Phone **</label>
-                  <input class="form-control" name="support_phone" value="{{$abs->support_phone}}" placeholder="Phone">
+                  <input class="form-control" name="support_phone" value="{{$bs->support_phone}}" placeholder="Phone">
                   @if ($errors->has('support_phone'))
                     <p class="mb-0 text-danger">{{$errors->first('support_phone')}}</p>
                   @endif

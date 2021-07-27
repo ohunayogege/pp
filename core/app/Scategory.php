@@ -11,8 +11,4 @@ class Scategory extends Model
     public function services() {
       return $this->hasMany('App\Service');
     }
-
-    public function language() {
-        return $this->belongsTo('App\Language');
-    }
 }

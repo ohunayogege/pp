@@ -11,8 +11,4 @@ class Blog extends Model
     public function bcategory() {
       return $this->belongsTo('App\Bcategory');
     }
-
-    public function language() {
-      return $this->belongsTo('App\Language');
-    }
 }

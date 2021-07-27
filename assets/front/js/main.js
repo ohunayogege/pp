@@ -1,1 +1,283 @@
-!function(e){"use strict";jQuery(document).ready(function(e){a(".hero2-carousel",!1,{0:{items:1}},8e3,1e3,!0,"fadeOut",1e3,!1);if(a(".case-carousel",!0,{0:{items:1},576:{items:2},992:{items:3},1367:{items:4},1750:{items:5}},5e3,1500,!1,!1,1500,!0),e(".pricing-tables .single-pricing-table").length>3)var o=!0;else o=!1;e(".pricing-carousel").owlCarousel({loop:!0,dots:!1,nav:o,navText:["<i class='flaticon-left-arrow'></i>","<i class='flaticon-right-arrow'></i>"],autoplay:!1,autoplayTimeout:5e3,smartSpeed:1500,rtl:1==rtl,items:3,responsive:{0:{items:1,nav:!0},768:{items:2,nav:!0},992:{items:3}}}),e(".project-ss-carousel").owlCarousel({loop:!0,dots:!0,nav:!0,navText:["<i class='flaticon-left-arrow'></i>","<i class='flaticon-right-arrow'></i>"],autoplay:!1,autoplayTimeout:5e3,smartSpeed:1500,rtl:1==rtl,items:1});a(".testimonial-carousel",!1,{0:{items:1},992:{items:2}},5e3,1500,!0,!1,1500,!0,30);function a(o,a,t,n,i,s,l,r,c,u=0,p=!1,m=!1){var d=e(o);d.length>0&&d.owlCarousel({loop:p,autoplay:!1,autoplayTimeout:n,autoplaySpeed:i,dots:s,nav:a,navText:["<i class='flaticon-left-arrow'></i>","<i class='flaticon-right-arrow'></i>"],smartSpeed:r,autoplayHoverPause:c,animateOut:l,margin:u,responsive:t,rtl:1==rtl})}a(".partner-carousel",!0,{0:{items:2},576:{items:3},992:{items:5}},3e3,500,!1,!1,1500,!0,30),e(".team-carousel").owlCarousel({loop:!1,dots:!1,margin:30,autoplay:!1,smartSpeed:1500,startPosition:2,autoplayTimeout:5e3,autoplayHoverPause:!0,rtl:1==rtl,nav:!0,navText:["<i class='flaticon-left-arrow'></i>","<i class='flaticon-right-arrow'></i>"],responsive:{0:{items:1},576:{items:2},992:{items:3},1200:{items:4}}}),e(".blog-carousel").owlCarousel({loop:!0,dots:!1,margin:22,autoplay:!1,smartSpeed:1500,startPosition:2,autoplayTimeout:5e3,autoplayHoverPause:!0,nav:!0,rtl:1==rtl,navText:["<i class='flaticon-left-arrow'></i>","<i class='flaticon-right-arrow'></i>"],responsive:{0:{items:1},768:{items:2},992:{items:2},1200:{items:3}}}),e(".language-btn").on("click",function(o){o.preventDefault(),o.stopPropagation(),console.log("clicked"),e(this).next(".language-dropdown").toggleClass("open")}),e(document).on("click",function(o){e(".language-dropdown").hasClass("open")&&e(".language-dropdown").removeClass("open")}),e("a.see-more").on("click",function(o){o.preventDefault(),e(this).prev("span").show(),e(this).hide()}),e("#mainMenu").slicknav({prependTo:"#mobileMenu"}),e(".back-to-top").on("click",function(){e("html, body").animate({scrollTop:0},1e3)}),e('[data-toggle="tooltip"]').tooltip(),e(".case-types li button").on("click",function(){e(".case-types").find(".is-checked").removeClass("is-checked"),e(this).addClass("is-checked")}),e("#particles-js").length>0&&particlesJS.load("particles-js","assets/front/js/particles.json"),e("#heroHome4").length>0&&e("#heroHome4").ripples({resolution:500,dropRadius:20,perturbance:.04}),e("#bgndVideo").length>0&&e("#bgndVideo").YTPlayer(),e(".single-magnific-ss").magnificPopup({type:"image",gallery:{enabled:!0}}),e(".video-play-button").magnificPopup({type:"iframe",mainClass:"mfp-fade",preloader:!0});var t=e("#statisticsSection");t.length>0&&e(document).bind("scroll",function(o){e(document).scrollTop()>t.offset().top-window.innerHeight&&(e(".round").each(function(){e(this).circleProgress({animation:{duration:1500,easing:"circleProgressEasing"}}).on("circle-animation-progress",function(o,a){e(this).find("strong").text(parseInt(a*e(this).data("number"))+"+")})}),e(document).unbind("scroll"))}),e(".single-ss").on("click",function(o){o.preventDefault();let a=e(this).data("id");e("#singleMagnificSs"+a).trigger("click")}),1==mainbs.is_announcement&&e(".announcement-banner").magnificPopup({type:"image",mainClass:"mfp-fade",callbacks:{open:function(){e.magnificPopup.instance.close=function(){sessionStorage.setItem("announcement","closed"),e.magnificPopup.proto.close.call(this)}}}})}),e(window).on("scroll",function(){e(window).scrollTop()>180?e(".header-area").addClass("sticky-navbar"):e(".header-area").removeClass("sticky-navbar"),e(window).scrollTop()>1e3?e(".back-to-top").addClass("show"):e(".back-to-top").removeClass("show")}),e(window).on("scroll",function(){initMasonry()}),jQuery(window).on("load",function(){if(e(".loader-container").addClass("loader-fadeout"),e(".loader-container").addClass("loader-fadeout"),initMasonry(),1==mainbs.is_announcement){null==sessionStorage.getItem("announcement")&&setTimeout(function(){e(".announcement-banner").trigger("click")},1e3*mainbs.announcement_delay)}})}(jQuery);
+(function($) {
+    "use strict";
+    jQuery(document).ready(function($) {
+
+        // hero carousel
+        var hero2Responsive = {
+            0: {
+                items: 1
+            }
+        };
+        owlCarsouelActivate('.hero2-carousel', false, hero2Responsive, 8000, 1000, true, 'fadeOut', 1000, false);
+
+        // case carousel
+        var caseResponsive = {
+            0: {
+                items: 1
+            },
+            576: {
+                items: 2
+            },
+            992: {
+                items: 3
+            },
+            1367: {
+                items: 4
+            },
+            1750: {
+                items: 5
+            }
+        };
+        owlCarsouelActivate('.case-carousel', true, caseResponsive, 5000, 1500, false, false, 1500, true);
+
+        // Project ss carousel
+        var projectCarousel = $('.project-ss-carousel');
+        projectCarousel.owlCarousel({
+            loop: true,
+            dots: true,
+            nav: true,
+            navText: ["<i class='flaticon-left-arrow'></i>", "<i class='flaticon-right-arrow'></i>"],
+            autoplay: false,
+            autoplayTimeout: 5000,
+            smartSpeed: 1500,
+            items: 1
+        });
+
+        // testimonial carousel
+        var testimonialResponsive = {
+            0: {
+                items: 1
+            },
+            992: {
+                items: 2
+            },
+        };
+        owlCarsouelActivate('.testimonial-carousel', false, testimonialResponsive, 5000, 1500, true, false, 1500, true, 30);
+
+        // Partner carousel
+        var partnerResponsive = {
+            0: {
+                items: 2
+            },
+            576: {
+                items: 3
+            },
+            992: {
+                items: 5
+            },
+        };
+        owlCarsouelActivate('.partner-carousel', true, partnerResponsive, 3000, 500, false, false, 1500, true, 30);
+
+        //owl carousel activate function
+        function owlCarsouelActivate(selector, nav, responsive, autoplayTimeout, autoplaySpeed, dots, animateOut, smartSpeed, autoplayHoverPause, margin = 0, loop = true, autoplay = true) {
+            var $selector = $(selector);
+            if ($selector.length > 0) {
+                $selector.owlCarousel({
+                    loop: loop,
+                    autoplay: true,
+                    autoplayTimeout: autoplayTimeout,
+                    autoplaySpeed: autoplaySpeed,
+                    dots: dots,
+                    nav: nav,
+                    navText: ["<i class='flaticon-left-arrow'></i>", "<i class='flaticon-right-arrow'></i>"],
+                    smartSpeed: smartSpeed,
+                    autoplayHoverPause: autoplayHoverPause,
+                    animateOut: animateOut,
+                    margin: margin,
+                    responsive: responsive
+                });
+            }
+        }
+
+        // team carousel initialization
+        var teamCarousel = $('.team-carousel');
+        teamCarousel.owlCarousel({
+            loop: true,
+            dots: false,
+            margin: 30,
+            autoplay: true,
+            smartSpeed: 1500,
+            startPosition: 2,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            nav: true,
+            navText: ["<i class='flaticon-left-arrow'></i>", "<i class='flaticon-right-arrow'></i>"],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                576: {
+                    items: 2
+                },
+                992: {
+                    items: 3
+                },
+                1200: {
+                    items: 4
+                }
+            }
+        });
+
+        // blog carousel initialization
+        var blogCarousel = $('.blog-carousel');
+        blogCarousel.owlCarousel({
+            loop: true,
+            dots: false,
+            margin: 22,
+            autoplay: true,
+            smartSpeed: 1500,
+            startPosition: 2,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            nav: true,
+            navText: ["<i class='flaticon-left-arrow'></i>", "<i class='flaticon-right-arrow'></i>"],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                992: {
+                    items: 2
+                },
+                1200: {
+                    items: 3
+                }
+            }
+        });
+
+        // language dropdown toggle on clicking button
+        $('.language-btn').on('click', function(event) {
+            event.preventDefault();
+             event.stopPropagation();
+            $(this).next('.language-dropdown').toggleClass('open');
+        });
+        $(document).on('click', function(event) {
+          if($('.language-dropdown').hasClass('open')) {
+            $('.language-dropdown').removeClass('open');
+          }
+        });
+
+        // slicknav initialization
+        $('#mainMenu').slicknav({
+            prependTo: '#mobileMenu'
+        });
+
+        // Back to top
+        $('.back-to-top').on('click', function() {
+            $("html, body").animate({
+                scrollTop: 0
+            }, 1000);
+        });
+
+        // change is-checked class on buttons
+        $('.case-types li button').on('click', function() {
+            $('.case-types').find('.is-checked').removeClass('is-checked');
+            $(this).addClass('is-checked');
+        });
+
+        // particles effect initialization for home 3
+        if ($("#particles-js").length > 0) {
+            particlesJS.load('particles-js', 'assets/front/js/particles.json');
+        }
+
+        // ripple effect initialization for home 4
+        if ($("#heroHome4").length > 0) {
+            $('#heroHome4').ripples({
+                resolution: 500,
+                dropRadius: 20,
+                perturbance: 0.04
+            });
+        }
+
+        // // background video initialization for home 5
+        if ($("#bgndVideo").length > 0) {
+            $("#bgndVideo").YTPlayer();
+        }
+
+
+        // project carousel
+        $('.single-magnific-ss').magnificPopup({
+          type: 'image',
+          gallery:{
+            enabled:true
+          }
+        });
+
+        // video popup in magnific popup
+        $('.video-play-button').magnificPopup({
+            type: 'iframe',
+            mainClass: 'mfp-fade',
+            preloader: true,
+        });
+
+        // statistics jquery circle progressbar initialization
+        var $section = $('#statisticsSection');
+        if ($section.length >0) {
+            $(document).bind('scroll', function (ev) {
+                var scrollOffset = $(document).scrollTop();
+                var containerOffset = $section.offset().top - window.innerHeight;
+                if (scrollOffset > containerOffset) {
+                  $('.round').each(function() {
+                    $(this).circleProgress({
+                      animation: {
+                        duration: 1500,
+                        easing: "circleProgressEasing"
+                      }
+                    }).on('circle-animation-progress', function(event, progress) {
+                      $(this).find('strong').text(parseInt(progress*$(this).data('number')) + "+");
+                    });
+                  });
+                  // unbind event not to load scroll again
+                  $(document).unbind('scroll');
+                }
+            });
+        }
+
+
+        $('.single-ss').on('click', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            $("#singleMagnificSs"+id).trigger('click');
+        });
+    });
+
+
+    $(window).on('scroll', function() {
+        // sticky menu activation
+        if ($(window).scrollTop() > 180) {
+            $('.header-area').addClass('sticky-navbar');
+        } else {
+            $('.header-area').removeClass('sticky-navbar');
+        }
+
+        // back to top button fade in / fade out
+        if ($(window).scrollTop() > 1000) {
+            $('.back-to-top').addClass('show');
+        } else {
+            $('.back-to-top').removeClass('show');
+        }
+    });
+
+
+    jQuery(window).on('load', function() {
+        // preloader fadeout onload
+        $(".loader-container").addClass('loader-fadeout');
+
+        // preloader fadeout onload
+        $(".loader-container").addClass('loader-fadeout');
+
+        // isotope initialize
+        $('.grid').isotope({
+            // set itemSelector so .grid-sizer is not used in layout
+            itemSelector: '.single-pic',
+            percentPosition: true,
+            masonry: {
+                // set to the element
+                columnWidth: '.grid-sizer'
+            }
+        });
+    });
+
+}(jQuery));

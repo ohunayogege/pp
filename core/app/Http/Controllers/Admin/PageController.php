@@ -5,178 +5,108 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Page;
-use App\Language;
 use App\BasicSetting as BS;
-use App\Scategory;
 use Session;
 use Validator;
+use XSSCleaner;
 
 class PageController extends Controller
 {
-    public function index(Request $request)
-    {
-        $lang = Language::where('code', $request->language)->first();
-        $lang_id = $lang->id;
-        $data['apages'] = Page::where('language_id', $lang_id)->orderBy('id', 'DESC')->get();
-
-        $data['lang_id'] = $lang_id;
-        return view('admin.page.index', $data);
+    public function index() {
+      $data['pages'] = Page::latest()->get();
+      return view('admin.page.index', $data);
     }
 
     public function create() {
-        return view('admin.page.create');
+      return view('admin.page.create');
     }
 
-    public function store(Request $request)
-    {
-        $slug = make_slug($request->name);
+    public function store(Request $request) {
+      $slug = str_slug($request->name, '-');
 
-        $messages = [
-            'language_id.required' => 'The language field is required',
-        ];
+      $rules = [
+        'name' => 'required|max:25',
+        'title' => 'required|max:30',
+        'subtitle' => 'required|max:38',
+        'body' => 'required'
+      ];
 
-        $rules = [
-            'language_id' => 'required',
-            'name' => 'required|max:25',
-            'status' => 'required',
-            'serial_number' => 'required|integer',
-        ];
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) {
+        $errmsgs = $validator->getMessageBag()->add('error', 'true');
+        return response()->json($validator->errors());
+      }
 
-        $validator = Validator::make($request->all(), $rules, $messages);
-        if ($validator->fails()) {
-            $errmsgs = $validator->getMessageBag()->add('error', 'true');
-            return response()->json($validator->errors());
-        }
+      $page = new Page;
+      $page->name = $request->name;
+      $page->title = $request->title;
+      $page->subtitle = $request->subtitle;
+      $page->slug = $slug;
+      $page->body = XSSCleaner::clean($request->body);
+      $page->save();
 
-        $page = new Page;
-        $page->language_id = $request->language_id;
-        $page->name = $request->name;
-        $page->title = $request->breadcrumb_title;
-        $page->subtitle = $request->breadcrumb_subtitle;
-        $page->slug = $slug;
-        $page->status = $request->status;
-        $page->serial_number = $request->serial_number;
-        $page->meta_keywords = $request->meta_keywords;
-        $page->meta_description = $request->meta_description;
-        $page->save();
-
-        Session::flash('success', 'Page created successfully!');
-        return "success";
+      Session::flash('success', 'Page created successfully!');
+      return "success";
     }
 
-    public function edit($pageID)
-    {
-        $data['page'] = Page::findOrFail($pageID);
-        return view('admin.page.edit', $data);
+    public function edit($pageID) {
+      $data['page'] = Page::findOrFail($pageID);
+      return view('admin.page.edit', $data);
     }
 
-    public function update(Request $request)
-    {
-        $slug = make_slug($request->name);
+    public function update(Request $request) {
+      $slug = str_slug($request->name, '-');
 
-        $rules = [
-            'name' => 'required|max:25',
-            'status' => 'required',
-            'serial_number' => 'required|integer',
-        ];
+      $rules = [
+        'name' => 'required|max:25',
+        'title' => 'required|max:30',
+        'subtitle' => 'required|max:38',
+        'body' => 'required'
+      ];
 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $errmsgs = $validator->getMessageBag()->add('error', 'true');
-            return response()->json($validator->errors());
-        }
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) {
+        $errmsgs = $validator->getMessageBag()->add('error', 'true');
+        return response()->json($validator->errors());
+      }
 
-        $pageID = $request->pageid;
+      $pageID = $request->pageid;
 
-        $page = Page::findOrFail($pageID);
-        $page->name = $request->name;
-        $page->title = $request->breadcrumb_title;
-        $page->subtitle = $request->breadcrumb_subtitle;
-        $page->slug = $slug;
-        $page->status = $request->status;
-        $page->serial_number = $request->serial_number;
-        $page->meta_keywords = $request->meta_keywords;
-        $page->meta_description = $request->meta_description;
-        $page->save();
+      $page = Page::findOrFail($pageID);
+      $page->name = $request->name;
+      $page->title = $request->title;
+      $page->subtitle = $request->subtitle;
+      $page->slug = $slug;
+      $page->body = XSSCleaner::clean($request->body);
+      $page->save();
 
-        Session::flash('success', 'Page updated successfully!');
-        return "success";
+      Session::flash('success', 'Page updated successfully!');
+      return "success";
     }
 
-    public function delete(Request $request)
-    {
-        $pageID = $request->pageid;
-        $page = Page::findOrFail($pageID);
-        $page->delete();
-        Session::flash('success', 'Page deleted successfully!');
-        return redirect()->back();
+    public function delete(Request $request) {
+      $pageID = $request->pageid;
+      $page = Page::findOrFail($pageID);
+      $page->delete();
+      Session::flash('success', 'Page deleted successfully!');
+      return redirect()->back();
     }
 
-    public function bulkDelete(Request $request)
-    {
-        $ids = $request->ids;
-
-        foreach ($ids as $id) {
-            $page = Page::findOrFail($id);
-            $page->delete();
-        }
-
-        Session::flash('success', 'Pages deleted successfully!');
-        return "success";
+    public function parentlink() {
+      return view('admin.page.parent-link');
     }
 
-    public function uploadPbImage(Request $request)
-    {
-        $files = $request->file('files');
-        $assets = [];
+    public function updateParentLink(Request $request) {
 
-        foreach ($files as $key => $file) {
-            $directory = "assets/front/img/pagebuilder/";
-            @mkdir($directory, 0775, true);
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($directory, $filename);
+      $request->validate([
+        'parent_link_name' => 'required',
+      ]);
 
+      $bs = BS::first();
+      $bs->parent_link_name = $request->parent_link_name;
+      $bs->save();
 
-            $path = url($directory. $filename);
-            $name = $file->getClientOriginalName();
-
-            $assets[] = [
-                'name' => $name,
-                'type' => 'image',
-                'src' =>  $path,
-                'height' => 350,
-                'width' => 250
-            ];
-        }
-
-        return response()->json(['data' => $assets]);
-    }
-
-    public function removePbImage(Request $request) {
-        $path = str_replace(url('/') . '/', '', $request->path);
-        @unlink($path);
-    }
-
-    public function uploadPbTui(Request $request) {
-        $directory = "assets/front/img/pagebuilder/";
-        @mkdir($directory, 0775, true);
-        
-        $image = $request->base_64;  // your base64 encoded
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = uniqid().'.'.'png';
-
-        $path = 'assets/front/img/pagebuilder/' . $imageName;
-        \File::put($path, base64_decode($image));
-
-        $assets[] = [
-            'name' => $imageName,
-            'type' => 'image',
-            'src' =>  url($path),
-            'height' => 350,
-            'width' => 250
-        ];
-
-        return response()->json(['data' => $assets]);
+      Session::flash('success', 'Parent link name updated successfully!');
+      return back();
     }
 }

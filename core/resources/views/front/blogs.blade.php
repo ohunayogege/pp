@@ -1,23 +1,25 @@
-@extends("front.$version.layout")
-
-@section('pagename')
- -
- @if (empty($category))
- {{__('All')}}
- @else
- {{convertUtf8($category->name)}}
- @endif
- {{__('Blogs')}}
-@endsection
-
-@section('meta-keywords', "$be->blogs_meta_keywords")
-@section('meta-description', "$be->blogs_meta_description")
-
-@section('breadcrumb-title', convertUtf8($bs->blog_title))
-@section('breadcrumb-subtitle', convertUtf8($bs->blog_subtitle))
-@section('breadcrumb-link', __('Latest Blogs'))
+@extends('front.layout')
 
 @section('content')
+  <!--   hero area start   -->
+  <div class="breadcrumb-area blogs">
+     <div class="container">
+        <div class="breadcrumb-txt">
+           <div class="row">
+              <div class="col-xl-7 col-lg-8 col-sm-10">
+                 <span>{{$bs->blog_title}}</span>
+                 <h1>{{$bs->blog_subtitle}}</h1>
+                 <ul class="breadcumb">
+                    <li><a href="{{route('front.index')}}">{{__('Home')}}</a></li>
+                    <li>{{__('Latest Blogs')}}</li>
+                 </ul>
+              </div>
+           </div>
+        </div>
+     </div>
+     <div class="breadcrumb-area-overlay"></div>
+  </div>
+  <!--   hero area end    -->
 
 
   <!--    blog lists start   -->
@@ -37,26 +39,13 @@
                     <div class="col-md-6">
                        <div class="single-blog">
                           <div class="blog-img-wrapper">
-                             <img class="lazy" data-src="{{asset('assets/front/img/blogs/'.$blog->main_image)}}" alt="">
+                             <img src="{{asset('assets/front/img/blogs/'.$blog->main_image)}}" alt="">
                           </div>
                           <div class="blog-txt">
-                            @php
-                                if (!empty($currentLang)) {
-                                    $blogDate = \Carbon\Carbon::parse($blog->created_at)->locale("$currentLang->code");
-                                } else {
-                                    $blogDate = \Carbon\Carbon::parse($blog->created_at)->locale("en");
-                                }
-
-                                $blogDate = $blogDate->translatedFormat('jS F, Y');
-                            @endphp
-                             <p class="date"><small>{{__('By')}} <span class="username">{{__('Admin')}}</span></small> | <small>{{$blogDate}}</small> </p>
-
-                             <h4 class="blog-title"><a href="{{route('front.blogdetails', [$blog->slug, $blog->id])}}">{{convertUtf8(strlen($blog->title)) > 40 ? convertUtf8(substr($blog->title, 0, 40)) . '...' : convertUtf8($blog->title)}}</a></h4>
-
-                             <p class="blog-summary">{!! (strlen(strip_tags(convertUtf8($blog->content))) > 100) ? substr(strip_tags(convertUtf8($blog->content)), 0, 100) . '...' : strip_tags(convertUtf8($blog->content)) !!}</p>
-
-                             <a href="{{route('front.blogdetails', [$blog->slug, $blog->id])}}" class="readmore-btn"><span>{{__('Read More')}}</span></a>
-
+                             <p class="date"><small>{{__('By')}} <span class="username">{{__('Admin')}}</span></small>    |    <small>{{date('d M, Y', strtotime($blog->created_at))}}</small> </p>
+                             <h4 class="blog-title"><a href="{{route('front.blogdetails', $blog->slug)}}">{{strlen($blog->title) > 40 ? substr($blog->title, 0, 40) . '...' : $blog->title}}</a></h4>
+                             <p class="blog-summary">{!! (strlen(strip_tags($blog->content)) > 100) ? substr(strip_tags($blog->content), 0, 100) . '...' : strip_tags($blog->content) !!}</p>
+                             <a href="{{route('front.blogdetails', $blog->slug)}}" class="readmore-btn"><span>{{__('Read More')}}</span></a>
                           </div>
                        </div>
                     </div>
@@ -90,17 +79,17 @@
                     </div>
                  </div>
                  <div class="blog-sidebar-widgets category-widget">
-                    <div class="category-lists job">
+                    <div class="category-lists">
                        <h4>{{__('Categories')}}</h4>
                        <ul>
                           @foreach ($bcats as $key => $bcat)
-                            <li class="single-category @if(request()->input('category') == $bcat->slug) active @endif"><a href="{{route('front.blogs', ['term'=>request()->input('term'), 'category'=>$bcat->slug, 'month' => request()->input('month'), 'year' => request()->input('year')])}}">{{convertUtf8($bcat->name)}}</a></li>
+                            <li class="single-category @if(request()->input('category') == $bcat->id) active @endif"><a href="{{route('front.blogs', ['term'=>request()->input('term'), 'category'=>$bcat->id, 'month' => request()->input('month'), 'year' => request()->input('year')])}}">{{$bcat->name}}</a></li>
                           @endforeach
                        </ul>
                     </div>
                  </div>
                  <div class="blog-sidebar-widgets category-widget">
-                    <div class="category-lists job">
+                    <div class="category-lists">
                        <h4>{{__('Archives')}}</h4>
                        <ul>
                           @foreach ($archives as $key => $archive)
@@ -110,25 +99,7 @@
                               $dateObj   = DateTime::createFromFormat('!m', $monthNum);
                               $monthName = $dateObj->format('F');
                             @endphp
-                            <li class="single-category @if(request()->input('month') == $myArr[0] && request()->input('year') == $myArr[1]) active @endif">
-                                <a href="{{route('front.blogs', ['term'=>request()->input('term'), 'category'=>request()->input('category'),'month'=>$myArr[0], 'year'=>$myArr[1]])}}">
-
-                                    @php
-                                        if (!empty($currentLang)) {
-                                            $monthName = \Carbon\Carbon::parse($monthName)->locale("$currentLang->code");
-                                            $year = \Carbon\Carbon::parse($myArr[1])->locale("$currentLang->code");
-                                        } else {
-                                            $monthName = \Carbon\Carbon::parse($monthName)->locale("en");
-                                            $year = \Carbon\Carbon::parse($myArr[1])->locale("en");
-                                        }
-
-                                        $monthName = $monthName->translatedFormat('F');
-                                        $year = $year->translatedFormat('Y');
-                                    @endphp
-
-                                    {{$monthName}} {{$year}}
-                                </a>
-                            </li>
+                            <li class="single-category @if(request()->input('month') == $myArr[0] && request()->input('year') == $myArr[1]) active @endif"><a href="{{route('front.blogs', ['term'=>request()->input('term'), 'category'=>request()->input('category'),'month'=>$myArr[0], 'year'=>$myArr[1]])}}">{{$monthName}} {{$myArr[1]}}</a></li>
                           @endforeach
                        </ul>
                     </div>
@@ -139,7 +110,7 @@
                     <form id="subscribeForm" class="subscribe-form" action="{{route('front.subscribe')}}" method="POST">
                        @csrf
                        <div class="form-element"><input name="email" type="email" placeholder="{{__('Email')}}"></div>
-                       <p id="erremail" class="text-danger mb-3 err-email"></p>
+                       <p id="erremail" class="text-danger mb-3"></p>
                        <div class="form-element"><input type="submit" value="{{__('Subscribe')}}"></div>
                     </form>
                  </div>

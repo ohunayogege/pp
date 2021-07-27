@@ -1,18 +1,11 @@
 <!--   Core JS Files   -->
 <script src="{{asset('assets/admin/js/core/jquery.3.2.1.min.js')}}"></script>
-<script src="{{asset('assets/admin/js/core/vue.js')}}"></script>
 <script src="{{asset('assets/admin/js/core/popper.min.js')}}"></script>
 <script src="{{asset('assets/admin/js/core/bootstrap.min.js')}}"></script>
 
 <!-- jQuery UI -->
 <script src="{{asset('assets/admin/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js')}}"></script>
 <script src="{{asset('assets/admin/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js')}}"></script>
-
-<!-- jQuery Timepicker -->
-<script src="{{asset('assets/front/js/jquery.timepicker.min.js')}}"></script>
-
-<!-- Select2 -->
-<script src="{{asset('assets/admin/js/plugin/select2/select2.min.js')}}"></script>
 
 <!-- jQuery Scrollbar -->
 <script src="{{asset('assets/admin/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js')}}"></script>
@@ -35,8 +28,8 @@
 <!-- DM Uploader JS -->
 <script src="{{asset('assets/admin/js/plugin/jquery.dm-uploader/jquery.dm-uploader.min.js')}}"></script>
 
-<!-- Summernote JS -->
-<script src="{{asset('assets/admin/js/plugin/summernote/summernote-bs4.js')}}"></script>
+<!-- NIC Edit JS -->
+<script src="{{asset('assets/admin/js/plugin/nicEdit/nicEdit.js')}}"></script>
 
 <!-- JS color JS -->
 <script src="{{asset('assets/admin/js/plugin/jscolor/jscolor.js')}}"></script>
@@ -55,16 +48,10 @@
   });
 </script>
 
-<script>
-    var imgupload = "{{route('admin.summernote.upload')}}";
-</script>
-
 <!-- Custom JS -->
 <script src="{{asset('assets/admin/js/custom.js')}}"></script>
 
 @yield('scripts')
-
-@yield('vuescripts')
 
 @if (session()->has('success'))
 <script>

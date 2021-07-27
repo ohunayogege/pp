@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Validation\Rule;
 use Auth;
 use Session;
 use Hash;
@@ -55,21 +54,13 @@ class ProfileController extends Controller
     }
 
     public function updateProfile(Request $request) {
-      $admin = Admin::findOrFail(Auth::guard('admin')->user()->id);
-
       $validatedData = $request->validate([
-        'username' => [
-            'required',
-            'max:255',
-            Rule::unique('admins')->ignore($admin->id)
-        ],
         'email' => 'required|email|max:255',
         'first_name' => 'required|max:255',
         'last_name' => 'required|max:255',
       ]);
 
-
-      $admin->username = $request->username;
+      $admin = Admin::findOrFail(Auth::guard('admin')->user()->id);
       $admin->email = $request->email;
       $admin->first_name = $request->first_name;
       $admin->last_name = $request->last_name;

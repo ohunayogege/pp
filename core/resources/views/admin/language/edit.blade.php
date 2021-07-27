@@ -52,15 +52,6 @@
                   <input type="text" class="form-control" name="code" placeholder="Enter code" value="{{$language->code}}">
                   <p id="errcode" class="mb-0 text-danger em"></p>
                 </div>
-                <div class="form-group">
-                  <label for="">Direction **</label>
-                  <select name="direction" class="form-control">
-                      <option value="" selected disabled>Select a Direction</option>
-                      <option value="0" {{$language->rtl == 0 ? 'selected' : ''}}>LTR (Left to Right)</option>
-                      <option value="1" {{$language->rtl == 1 ? 'selected' : ''}}>RTL (Right to Left)</option>
-                  </select>
-                  <p id="errdirection" class="mb-0 text-danger em"></p>
-                </div>
               </form>
             </div>
           </div>

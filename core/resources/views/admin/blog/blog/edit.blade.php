@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($blog->language) && $blog->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    form .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Edit Blog</h4>
@@ -44,7 +28,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Edit Blog</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.blog.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.blog.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -109,14 +93,8 @@
                 </div>
                 <div class="form-group">
                   <label for="">Content **</label>
-                  <textarea class="form-control summernote" name="content" data-height="300" placeholder="Enter content">{{replaceBaseUrl($blog->content)}}</textarea>
+                  <textarea class="form-control nic-edit" id="nicContent" name="content" rows="8" placeholder="Enter content">{{$blog->content}}</textarea>
                   <p id="errcontent" class="mb-0 text-danger em"></p>
-                </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="{{$blog->serial_number}}" placeholder="Enter Serial Number">
-                  <p id="errserial_number" class="mb-0 text-danger em"></p>
-                  <p class="text-warning"><small>The higher the serial number is, the later the blog will be shown.</small></p>
                 </div>
                 <div class="form-group">
                   <label for="">Meta Keywords</label>

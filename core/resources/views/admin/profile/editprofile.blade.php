@@ -1,9 +1,5 @@
 @extends('admin.layout')
 
-@section('pagename')
- - {{__('Edit Profile')}}
-@endsection
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Profile</h4>
@@ -75,17 +71,6 @@
                <form action="{{route('admin.updateProfile')}}" method="post" role="form">
                  {{csrf_field()}}
                  <div class="form-body">
-                    <div class="form-group">
-                        <div class="col-md-12">
-                          <label>Username</label>
-                        </div>
-                       <div class="col-md-12">
-                          <input class="form-control input-lg" name="username" value="{{$admin->username}}" placeholder="Your Username" type="text">
-                          @if ($errors->has('username'))
-                            <p style="margin:0px;" class="text-danger">{{$errors->first('username')}}</p>
-                          @endif
-                       </div>
-                    </div>
                      <div class="form-group">
                          <div class="col-md-12">
                            <label>Email</label>

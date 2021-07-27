@@ -1,24 +1,5 @@
 @extends('admin.layout')
 
-
-@if(!empty($point->language) && $point->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
-
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Approach Section</h4>
@@ -48,7 +29,7 @@
         <form id="pointForm" action="{{route('admin.approach.point.update')}}" method="post" onsubmit="update(event)">
           <div class="card-header">
             <div class="card-title d-inline-block">Edit Point</div>
-            <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.approach.index') . '?language=' . request()->input('language')}}">
+            <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.approach.index')}}">
 							<span class="btn-label">
 								<i class="fas fa-backward" style="font-size: 12px;"></i>
 							</span>
@@ -77,17 +58,6 @@
                     <small>NB: click on the dropdown sign to select an icon.</small>
                   </div>
                 </div>
-
-                @if (getVersion($be->theme_version) == 'cleaning')
-                    <div class="form-group">
-                        <label for="">Color **</label>
-                        <input type="text" class="form-control jscolor" name="color" value="{{$point->color}}">
-                        @if ($errors->has('color'))
-                          <p class="mb-0 text-danger">{{$errors->first('color')}}</p>
-                        @endif
-                    </div>
-                @endif
-
                 <div class="form-group">
                   <label for="">Title **</label>
                   <input type="text" class="form-control" name="title" value="{{$point->title}}" placeholder="Enter Title">
@@ -101,14 +71,6 @@
                   @if ($errors->has('short_text'))
                     <p class="mb-0 text-danger">{{$errors->first('short_text')}}</p>
                   @endif
-                </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="{{$point->serial_number}}" placeholder="Enter Serial Number">
-                  @if ($errors->has('serial_number'))
-                    <p class="mb-0 text-danger">{{$errors->first('serial_number')}}</p>
-                  @endif
-                  <p class="text-warning"><small>The higher the serial number is, the later the point will be shown in approach section.</small></p>
                 </div>
               </div>
             </div>

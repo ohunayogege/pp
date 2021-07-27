@@ -28,7 +28,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Add Member</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.member.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.member.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -77,16 +77,6 @@
                 @csrf
                 <input type="hidden" id="image" name="" value="">
                 <div class="form-group">
-                    <label for="">Language **</label>
-                    <select name="language_id" class="form-control">
-                        <option value="" selected disabled>Select a language</option>
-                        @foreach ($langs as $lang)
-                            <option value="{{$lang->id}}">{{$lang->name}}</option>
-                        @endforeach
-                    </select>
-                    <p id="errlanguage_id" class="mb-0 text-danger em"></p>
-                </div>
-                <div class="form-group">
                   <label for="">Name **</label>
                   <input type="text" class="form-control" name="name" value="" placeholder="Enter name">
                   <p id="errname" class="mb-0 text-danger em"></p>
@@ -98,22 +88,22 @@
                 </div>
                 <div class="form-group">
                   <label for="">Facebook</label>
-                  <input type="text" class="form-control ltr" name="facebook" value="" placeholder="Enter facebook url">
+                  <input type="text" class="form-control" name="facebook" value="" placeholder="Enter facebook url">
                   <p id="errfacebook" class="mb-0 text-danger em"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Twitter</label>
-                  <input type="text" class="form-control ltr" name="twitter" value="" placeholder="Enter twitter url">
+                  <input type="text" class="form-control" name="twitter" value="" placeholder="Enter twitter url">
                   <p id="errtwitter" class="mb-0 text-danger em"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Instagram</label>
-                  <input type="text" class="form-control ltr" name="instagram" value="" placeholder="Enter instagram url">
+                  <input type="text" class="form-control" name="instagram" value="" placeholder="Enter instagram url">
                   <p id="errinstagram" class="mb-0 text-danger em"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Linkedin</label>
-                  <input type="text" class="form-control ltr" name="linkedin" value="" placeholder="Enter linkedin url">
+                  <input type="text" class="form-control" name="linkedin" value="" placeholder="Enter linkedin url">
                   <p id="errlinkedin" class="mb-0 text-danger em"></p>
                 </div>
               </form>
@@ -124,7 +114,7 @@
           <div class="form">
             <div class="form-group from-show-notify row">
               <div class="col-12 text-center">
-                <button type="submit" id="submitBtn" class="btn btn-success">Submit</button>
+                <button type="submit" id="submitBtn" class="btn btn-success">Update</button>
               </div>
             </div>
           </div>
@@ -134,39 +124,4 @@
     </div>
   </div>
 
-@endsection
-
-
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        $("select[name='language_id']").on('change', function() {
-            $(".request-loader").addClass("show");
-            let url = "{{url('/')}}/admin/rtlcheck/" + $(this).val();
-            console.log(url);
-            $.get(url, function(data) {
-                $(".request-loader").removeClass("show");
-                if (data == 1) {
-                    $("form input").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form select").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form textarea").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                } else {
-                    $("form input, form select, form textarea").removeClass('rtl');
-                }
-            })
-        });
-    });
-</script>
 @endsection

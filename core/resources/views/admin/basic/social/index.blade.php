@@ -59,12 +59,6 @@
                     <p class="mb-0 text-danger">{{$errors->first('url')}}</p>
                   @endif
                 </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="" placeholder="Enter Serial Number">
-                  <p id="errserial_number" class="mb-0 text-danger em"></p>
-                  <p class="text-warning"><small>The higher the serial number is, the later the social link will be shown.</small></p>
-                </div>
               </div>
             </div>
           </div>
@@ -95,28 +89,26 @@
               @else
                 <div class="table-responsive">
                   <table class="table table-striped mt-3">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Icon</th>
-                            <th scope="col">URL</th>
-                            <th scope="col">Serial Number</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    								<thead>
+    									<tr>
+    										<th scope="col">#</th>
+    										<th scope="col">Icon</th>
+    										<th scope="col">URL</th>
+    										<th scope="col">Actions</th>
+    									</tr>
+    								</thead>
+    								<tbody>
                       @foreach ($socials as $key => $social)
                         <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td><i class="{{ $social->icon }}"></i></td>
-                            <td>{{$social->url}}</td>
-                            <td>{{$social->serial_number}}</td>
-                            <td>
+      										<td>{{$loop->iteration}}</td>
+      										<td>{!! $social->icon !!}</td>
+      										<td>{{$social->url}}</td>
+      										<td>
                             <a class="btn btn-secondary btn-sm" href="{{route('admin.social.edit', $social->id)}}">
-                                <span class="btn-label">
-                                    <i class="fas fa-edit"></i>
-                                </span>
-                                Edit
+      											<span class="btn-label">
+      												<i class="fas fa-edit"></i>
+      											</span>
+      											Edit
                             </a>
                             <form class="d-inline-block deleteform" action="{{route('admin.social.delete')}}" method="post">
                               @csrf
@@ -129,10 +121,10 @@
                               </button>
                             </form>
                           </td>
-                        </tr>
+      									</tr>
                       @endforeach
-                        </tbody>
-                    </table>
+    								</tbody>
+    							</table>
                 </div>
               @endif
             </div>

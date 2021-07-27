@@ -34,24 +34,8 @@
 
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card-title d-inline-block">Sliders</div>
-                </div>
-                <div class="col-lg-3">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-                <div class="col-lg-4 offset-lg-1 mt-2 mt-lg-0">
-                    <a href="#" class="btn btn-primary float-lg-right float-left" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Slider</a>
-                </div>
-            </div>
+          <div class="card-title d-inline-block">Sliders</div>
+          <a href="#" class="btn btn-primary float-right" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Slider</a>
         </div>
         <div class="card-body">
           <div class="row">
@@ -67,7 +51,7 @@
                           <img src="{{asset('assets/front/img/sliders/'.$slider->image)}}" alt="" style="width:100%;">
         								</div>
         								<div class="card-footer text-center">
-                          <a class="btn btn-secondary btn-sm mr-2" href="{{route('admin.slider.edit', $slider->id) . '?language=' . request()->input('language')}}">
+                          <a class="btn btn-secondary btn-sm mr-2" href="{{route('admin.slider.edit', $slider->id)}}">
                           <span class="btn-label">
                             <i class="fas fa-edit"></i>
                           </span>
@@ -99,7 +83,7 @@
 
   <!-- Create Slider Modal -->
   <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Add Slider</h5>
@@ -108,7 +92,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form class="mb-3 dm-uploader drag-and-drop-zone modal-form" enctype="multipart/form-data" action="{{route('admin.slider.upload')}}" method="POST">
+          <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.slider.upload')}}" method="POST">
             <div class="form-row px-2">
               <div class="col-12 mb-2">
                 <label for=""><strong>Image **</strong></label>
@@ -142,121 +126,28 @@
               </div>
             </div>
           </form>
-          <form class="modal-form" id="ajaxForm" action="{{route('admin.slider.store')}}" method="post">
+          <form id="ajaxForm" action="{{route('admin.slider.store')}}" method="post">
             @csrf
             <input type="hidden" id="image" name="slider_image" value="">
             <div class="form-group">
-                <label for="">Language **</label>
-                <select name="language_id" class="form-control">
-                    <option value="" selected disabled>Select a language</option>
-                    @foreach ($langs as $lang)
-                        <option value="{{$lang->id}}">{{$lang->name}}</option>
-                    @endforeach
-                </select>
-                <p id="errlanguage_id" class="mb-0 text-danger em"></p>
+              <label for="">Title **</label>
+              <input type="text" class="form-control" name="title" value="" placeholder="Enter Title">
+              <p id="errtitle" class="mb-0 text-danger em"></p>
             </div>
-
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="">Title </label>
-                      <input type="text" class="form-control" name="title" value="" placeholder="Enter Title">
-                      <p id="errtitle" class="mb-0 text-danger em"></p>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="">Title Font Size **</label>
-                      <input type="number" class="form-control ltr" name="title_font_size" value="">
-                      <p id="errtitle_font_size" class="em text-danger mb-0"></p>
-                    </div>
-                </div>
-            </div>
-
-
-            @if (getVersion($be->theme_version) == 'gym' || getVersion($be->theme_version) == 'car' || getVersion($be->theme_version) == 'cleaning')
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="">Bold Text </label>
-                            <input type="text" class="form-control" name="bold_text" value="" placeholder="Enter Bold Text">
-                            <p id="errbold_text" class="mb-0 text-danger em"></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="">Bold Text Font Size **</label>
-                            <input type="number" class="form-control ltr" name="bold_text_font_size" value="">
-                            <p id="errbold_text_font_size" class="em text-danger mb-0"></p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-
-
-            @if (getVersion($be->theme_version) == 'cleaning')
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label for="">Bold Text Color **</label>
-                            <input type="text" class="form-control jscolor" name="bold_text_color" value="#13287e">
-                            <p id="errbold_text_color" class="em text-danger mb-0"></p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-
-            @if (getVersion($be->theme_version) != 'cleaning')
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                        <label for="">Text </label>
-                        <input type="text" class="form-control" name="text" value="" placeholder="Enter Text">
-                        <p id="errtext" class="mb-0 text-danger em"></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="">Text Font Size **</label>
-                            <input type="number" class="form-control ltr" name="text_font_size" value="">
-                            <p id="errtext_font_size" class="em text-danger mb-0"></p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="">Button Text </label>
-                      <input type="text" class="form-control" name="button_text" value="" placeholder="Enter Button Text">
-                      <p id="errbutton_text" class="mb-0 text-danger em"></p>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Button Text Font Size **</label>
-                        <input type="number" class="form-control ltr" name="button_text_font_size" value="">
-                        <p id="errbutton_text_font_size" class="em text-danger mb-0"></p>
-                    </div>
-                </div>
-            </div>
-
-
             <div class="form-group">
-              <label for="">Button URL </label>
-              <input type="text" class="form-control ltr" name="button_url" value="" placeholder="Enter Button URL">
+              <label for="">Text **</label>
+              <input type="text" class="form-control" name="text" value="" placeholder="Enter Text">
+              <p id="errtext" class="mb-0 text-danger em"></p>
+            </div>
+            <div class="form-group">
+              <label for="">Button Text **</label>
+              <input type="text" class="form-control" name="button_text" value="" placeholder="Enter Button Text">
+              <p id="errbutton_text" class="mb-0 text-danger em"></p>
+            </div>
+            <div class="form-group">
+              <label for="">Button URL **</label>
+              <input type="text" class="form-control" name="button_url" value="" placeholder="Enter Button URL">
               <p id="errbutton_url" class="mb-0 text-danger em"></p>
-            </div>
-            <div class="form-group">
-              <label for="">Serial Number **</label>
-              <input type="number" class="form-control ltr" name="serial_number" value="" placeholder="Enter Serial Number">
-              <p id="errserial_number" class="mb-0 text-danger em"></p>
-              <p class="text-warning"><small>The higher the serial number is, the later the slider will be shown.</small></p>
             </div>
           </form>
         </div>
@@ -267,45 +158,4 @@
       </div>
     </div>
   </div>
-@endsection
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-
-    // make input fields RTL
-    $("select[name='language_id']").on('change', function() {
-        $(".request-loader").addClass("show");
-        let url = "{{url('/')}}/admin/rtlcheck/" + $(this).val();
-        console.log(url);
-        $.get(url, function(data) {
-            $(".request-loader").removeClass("show");
-            if (data == 1) {
-                $("form input").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form select").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form textarea").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form .nicEdit-main").each(function() {
-                    $(this).addClass('rtl text-right');
-                });
-
-            } else {
-                $("form input, form select, form textarea").removeClass('rtl');
-                $("form .nicEdit-main").removeClass('rtl text-right');
-            }
-        })
-    });
-});
-</script>
 @endsection

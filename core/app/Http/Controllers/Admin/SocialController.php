@@ -18,13 +18,11 @@ class SocialController extends Controller
       $request->validate([
         'icon' => 'required',
         'url' => 'required',
-        'serial_number' => 'required|integer',
       ]);
 
       $social = new Social;
       $social->icon = $request->icon;
       $social->url = $request->url;
-      $social->serial_number = $request->serial_number;
       $social->save();
 
       Session::flash('success', 'New link added successfully!');
@@ -40,13 +38,11 @@ class SocialController extends Controller
       $request->validate([
         'icon' => 'required',
         'url' => 'required',
-        'serial_number' => 'required|integer',
       ]);
 
       $social = Social::findOrFail($request->socialid);
       $social->icon = $request->icon;
       $social->url = $request->url;
-      $social->serial_number = $request->serial_number;
       $social->save();
 
       Session::flash('success', 'Social link updated successfully!');

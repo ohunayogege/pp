@@ -1,18 +1,25 @@
-@php
-    $version = getVersion($be->theme_version);
-
-    if ($version == 'dark') {
-        $version = 'default';
-    }
-@endphp
-
-@extends("front.$version.layout")
-
-@section('breadcrumb-title', $bs->error_title)
-@section('breadcrumb-subtitle', $bs->error_subtitle)
-@section('breadcrumb-link', __('404'))
+@extends('front.layout')
 
 @section('content')
+  <!--   breadcrumb area start   -->
+  <div class="breadcrumb-area contact">
+     <div class="container">
+        <div class="breadcrumb-txt">
+           <div class="row">
+              <div class="col-xl-7 col-lg-8 col-sm-10">
+                 <span>{{$bs->error_title}}</span>
+                 <h1>{{$bs->error_subtitle}}</h1>
+                 <ul class="breadcumb">
+                    <li><a href="{{route('front.index')}}">Home</a></li>
+                    <li>404 Page</li>
+                 </ul>
+              </div>
+           </div>
+        </div>
+     </div>
+     <div class="breadcrumb-area-overlay"></div>
+  </div>
+  <!--   breadcrumb area end    -->
 
 
   <!--    Error section start   -->

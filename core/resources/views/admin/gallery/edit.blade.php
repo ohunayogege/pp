@@ -1,21 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($gallery->language) && $gallery->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Edit Gallery</h4>
@@ -44,7 +28,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Edit Gallery</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.gallery.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.gallery.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -96,12 +80,6 @@
                   <label for="">Title **</label>
                   <input type="text" class="form-control" name="title" value="{{$gallery->title}}" placeholder="Enter title">
                   <p id="errtitle" class="mb-0 text-danger em"></p>
-                </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="{{$gallery->serial_number}}" placeholder="Enter Serial Number">
-                  <p id="errserial_number" class="mb-0 text-danger em"></p>
-                  <p class="text-warning"><small>The higher the serial number is, the later the image will be shown.</small></p>
                 </div>
               </form>
             </div>

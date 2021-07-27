@@ -15,8 +15,4 @@ class Service extends Model
     public function portfolios() {
       return $this->hasMany('App\Portfolio');
     }
-
-    public function language() {
-      return $this->belongsTo('App\Language');
-    }
 }

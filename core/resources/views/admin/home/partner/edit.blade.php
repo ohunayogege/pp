@@ -1,23 +1,5 @@
 @extends('admin.layout')
 
-
-@if(!empty($partner->language) && $partner->language->rtl == 1)
-@section('styles')
-<style>
-    form input,
-    form textarea,
-    form select {
-        direction: rtl;
-    }
-    .nicEdit-main {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Edit Partner</h4>
@@ -46,7 +28,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title d-inline-block">Edit Partner</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.partner.index') . '?language=' . request()->input('language')}}">
+          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{route('admin.partner.index')}}">
             <span class="btn-label">
               <i class="fas fa-backward" style="font-size: 12px;"></i>
             </span>
@@ -96,14 +78,8 @@
                 <input type="hidden" name="partner_id" value="{{$partner->id}}">
                 <div class="form-group">
                   <label for="">URL **</label>
-                  <input type="text" class="form-control ltr" name="url" value="{{$partner->url}}" placeholder="Enter URL of social media account">
+                  <input type="text" class="form-control" name="url" value="{{$partner->url}}" placeholder="Enter URL of social media account">
                   <p id="errurl" class="text-danger mb-0 em"></p>
-                </div>
-                <div class="form-group">
-                  <label for="">Serial Number **</label>
-                  <input type="number" class="form-control ltr" name="serial_number" value="{{$partner->serial_number}}" placeholder="Enter Serial Number">
-                  <p id="errserial_number" class="mb-0 text-danger em"></p>
-                  <p class="text-warning"><small>The higher the serial number is, the later the partner will be shown.</small></p>
                 </div>
               </form>
             </div>

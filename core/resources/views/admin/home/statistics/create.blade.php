@@ -1,7 +1,7 @@
 <div class="modal fade" id="createStatisticModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-         <form id="ajaxForm" class="modal-form" action="{{route('admin.statistics.store')}}" method="POST">
+         <form id="ajaxForm" action="{{route('admin.statistics.store')}}" method="POST">
            <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">Add Statistic</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -12,16 +12,6 @@
               <div class="row">
                  <div class="col-lg-12">
                     @csrf
-                    <div class="form-group">
-                        <label for="">Language **</label>
-                        <select name="language_id" class="form-control">
-                            <option value="" selected disabled>Select a language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->id}}">{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                        <p id="errlanguage_id" class="mb-0 text-danger em"></p>
-                    </div>
                     <div class="form-group">
                        <label for="">Icon **</label>
                        <div class="btn-group d-block">
@@ -51,12 +41,6 @@
                           </div>
                        </div>
                        <p id="errquantity" class="mb-0 text-danger em"></p>
-                    </div>
-                    <div class="form-group">
-                      <label for="">Serial Number **</label>
-                      <input type="number" class="form-control ltr" name="serial_number" value="" placeholder="Enter Serial Number">
-                      <p id="errserial_number" class="mb-0 text-danger em"></p>
-                      <p class="text-warning"><small>The higher the serial number is, the later the statistic will be shown.</small></p>
                     </div>
                  </div>
               </div>

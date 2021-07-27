@@ -44,7 +44,7 @@
                   </div>
                   <div class="form-group">
                     <label for="">Message **</label>
-                    <textarea name="message" class="summernote" data-height="150"></textarea>
+                    <textarea name="message" class="nic-edit" rows="8" cols="80"></textarea>
                     @if ($errors->has('message'))
                       <p class="text-danger mb-0">{{$errors->first('message')}}</p>
                     @endif

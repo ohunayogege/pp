@@ -1,25 +1,5 @@
 @extends('admin.layout')
 
-@php
-$selLang = \App\Language::where('code', request()->input('language'))->first();
-@endphp
-@if(!empty($selLang) && $selLang->rtl == 1)
-@section('styles')
-<style>
-    form:not(.modal-form) input,
-    form:not(.modal-form) textarea,
-    form:not(.modal-form) select,
-    select[name='language'] {
-        direction: rtl;
-    }
-    form:not(.modal-form) .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Service Categories</h4>
@@ -48,25 +28,8 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
 
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card-title d-inline-block">Categories</div>
-                </div>
-                <div class="col-lg-3">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-                <div class="col-lg-4 offset-lg-1 mt-2 mt-lg-0">
-                    <a href="#" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Category</a>
-                    <button class="btn btn-danger float-right btn-sm mr-2 d-none bulk-delete" data-href="{{route('admin.scategory.bulk.delete')}}"><i class="flaticon-interface-5"></i> Delete</button>
-                </div>
-            </div>
+          <div class="card-title d-inline-block">Categories</div>
+          <a href="#" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Category</a>
         </div>
         <div class="card-body">
           <div class="row">
@@ -78,13 +41,9 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
                   <table class="table table-striped mt-3">
                     <thead>
                       <tr>
-                        <th scope="col">
-                            <input type="checkbox" class="bulk-check" data-val="all">
-                        </th>
+                        <th scope="col">#</th>
                         <th scope="col">Icon Image</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Featured</th>
-                        <th scope="col">Serial Number</th>
                         <th scope="col">Status</th>
                         <th scope="col">Actions</th>
                       </tr>
@@ -92,26 +51,9 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
                     <tbody>
                       @foreach ($scategorys as $key => $scategory)
                         <tr>
-                          <td>
-                            <input type="checkbox" class="bulk-check" data-val="{{$scategory->id}}">
-                          </td>
-                          <td>
-                              @if (!empty($scategory->image))
-                                <img src="{{asset('assets/front/img/service_category_icons/'.$scategory->image)}}" width="40">
-                              @endif
-                          </td>
-                          <td>{{convertUtf8($scategory->name)}}</td>
-                          <td>
-                              <form id="featureForm{{$scategory->id}}" class="d-inline-block" action="{{route('admin.scategory.feature')}}" method="post">
-                              @csrf
-                              <input type="hidden" name="scategory_id" value="{{$scategory->id}}">
-                              <select class="form-control {{$scategory->feature == 1 ? 'bg-success' : 'bg-danger'}}" name="feature" onchange="document.getElementById('featureForm{{$scategory->id}}').submit();">
-                                  <option value="1" {{$scategory->feature == 1 ? 'selected' : ''}}>Yes</option>
-                                  <option value="0" {{$scategory->feature == 0 ? 'selected' : ''}}>No</option>
-                              </select>
-                              </form>
-                          </td>
-                          <td>{{$scategory->serial_number}}</td>
+                          <td>{{$loop->iteration}}</td>
+                          <td><img src="{{asset('assets/front/img/service_category_icons/'.$scategory->image)}}" width="40"></td>
+                          <td>{{$scategory->name}}</td>
                           <td>
                             @if ($scategory->status == 1)
                               <h2 class="d-inline-block"><span class="badge badge-success">Active</span></h2>
@@ -120,7 +62,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
                             @endif
                           </td>
                           <td>
-                            <a class="btn btn-secondary btn-sm editbtn" href="{{route('admin.scategory.edit', $scategory->id) . '?language=' . request()->input('language')}}">
+                            <a class="btn btn-secondary btn-sm editbtn" href="{{route('admin.scategory.edit', $scategory->id)}}">
                               <span class="btn-label">
                                 <i class="fas fa-edit"></i>
                               </span>
@@ -149,7 +91,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
         <div class="card-footer">
           <div class="row">
             <div class="d-inline-block mx-auto">
-              {{$scategorys->appends(['language' => request()->input('language')])->links()}}
+              {{$scategorys->links()}}
             </div>
           </div>
         </div>
@@ -169,7 +111,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
           </button>
         </div>
         <div class="modal-body">
-          <form class="mb-3 dm-uploader drag-and-drop-zone modal-form" enctype="multipart/form-data" action="{{route('admin.scategory.upload')}}" method="POST">
+          <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.scategory.upload')}}" method="POST">
             <div class="form-row px-2">
               <div class="col-12 mb-2">
                 <label for=""><strong>Icon mage **</strong></label>
@@ -204,19 +146,9 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
             </div>
           </form>
 
-          <form id="ajaxForm" class="modal-form" action="{{route('admin.scategory.store')}}" method="POST">
+          <form id="ajaxForm" class="" action="{{route('admin.scategory.store')}}" method="POST">
             @csrf
             <input type="hidden" id="image" name="service_category_icon" value="">
-            <div class="form-group">
-                <label for="">Language **</label>
-                <select name="language_id" class="form-control">
-                    <option value="" selected disabled>Select a language</option>
-                    @foreach ($langs as $lang)
-                        <option value="{{$lang->id}}">{{$lang->name}}</option>
-                    @endforeach
-                </select>
-                <p id="errlanguage_id" class="mb-0 text-danger em"></p>
-            </div>
             <div class="form-group">
               <label for="">Name **</label>
               <input type="text" class="form-control" name="name" value="" placeholder="Enter name">
@@ -229,18 +161,12 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
             </div>
             <div class="form-group">
               <label for="">Status **</label>
-              <select class="form-control ltr" name="status">
+              <select class="form-control" name="status">
                 <option value="" selected disabled>Select a status</option>
                 <option value="1">Active</option>
                 <option value="0">Deactive</option>
               </select>
               <p id="errstatus" class="mb-0 text-danger em"></p>
-            </div>
-            <div class="form-group">
-              <label for="">Serial Number **</label>
-              <input type="number" class="form-control ltr" name="serial_number" value="" placeholder="Enter Serial Number">
-              <p id="errserial_number" class="mb-0 text-danger em"></p>
-              <p class="text-warning"><small>The higher the serial number is, the later the service category will be shown everywhere.</small></p>
             </div>
           </form>
         </div>
@@ -252,45 +178,4 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
     </div>
   </div>
 
-@endsection
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-
-    // make input fields RTL
-    $("select[name='language_id']").on('change', function() {
-        $(".request-loader").addClass("show");
-        let url = "{{url('/')}}/admin/rtlcheck/" + $(this).val();
-        console.log(url);
-        $.get(url, function(data) {
-            $(".request-loader").removeClass("show");
-            if (data == 1) {
-                $("form.modal-form input").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.modal-form select").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.modal-form textarea").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.modal-form .nicEdit-main").each(function() {
-                    $(this).addClass('rtl text-right');
-                });
-
-            } else {
-                $("form.modal-form input, form.modal-form select, form.modal-form textarea").removeClass('rtl');
-                $("form.modal-form .nicEdit-main").removeClass('rtl text-right');
-            }
-        })
-    });
-});
-</script>
 @endsection

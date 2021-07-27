@@ -1,22 +1,5 @@
 @extends('admin.layout')
 
-@if(!empty($abs->language) && $abs->language->rtl == 1)
-@section('styles')
-<style>
-    form:not(.modal-form) input,
-    form:not(.modal-form) textarea,
-    form:not(.modal-form) select,
-    select[name='language'] {
-        direction: rtl;
-    }
-    form:not(.modal-form) .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Testimonials</h4>
@@ -44,30 +27,16 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="card-title">Title & Subtitle</div>
-                </div>
-                <div class="col-lg-2">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-            </div>
+          <div class="card-title">Title & Subtitle</div>
         </div>
-        <form class="" action="{{route('admin.testimonialtext.update', $lang_id)}}" method="post">
+        <form class="" action="{{route('admin.testimonialtext.update')}}" method="post">
           @csrf
           <div class="card-body">
             <div class="row">
               <div class="col-lg-6">
                 <div class="form-group">
                   <label>Title **</label>
-                  <input class="form-control" name="testimonial_section_title" value="{{$abs->testimonial_title}}" placeholder="Enter Title">
+                  <input class="form-control" name="testimonial_section_title" value="{{$bs->testimonial_title}}" placeholder="Enter Title">
                   @if ($errors->has('testimonial_section_title'))
                     <p class="mb-0 text-danger">{{$errors->first('testimonial_section_title')}}</p>
                   @endif
@@ -76,7 +45,7 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <label>Subtitle **</label>
-                  <input class="form-control" name="testimonial_section_subtitle" value="{{$abs->testimonial_subtitle}}" placeholder="Enter Subtitle">
+                  <input class="form-control" name="testimonial_section_subtitle" value="{{$bs->testimonial_subtitle}}" placeholder="Enter Subtitle">
                   @if ($errors->has('testimonial_section_subtitle'))
                     <p class="mb-0 text-danger">{{$errors->first('testimonial_section_subtitle')}}</p>
                   @endif
@@ -115,7 +84,6 @@
                         <th scope="col">Image</th>
                         <th scope="col">Name</th>
                         <th scope="col">Rank</th>
-                        <th scope="col">Serial Number</th>
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -124,11 +92,10 @@
                         <tr>
                           <td>{{$loop->iteration}}</td>
                           <td><img src="{{asset('assets/front/img/testimonials/'.$testimonial->image)}}" alt="" width="40"></td>
-                          <td>{{convertUtf8($testimonial->name)}}</td>
-                          <td>{{convertUtf8($testimonial->rank)}}</td>
-                          <td>{{$testimonial->serial_number}}</td>
+                          <td>{{$testimonial->name}}</td>
+                          <td>{{$testimonial->rank}}</td>
                           <td>
-                            <a class="btn btn-secondary btn-sm" href="{{route('admin.testimonial.edit', $testimonial->id) . '?language=' . request()->input('language')}}">
+                            <a class="btn btn-secondary btn-sm" href="{{route('admin.testimonial.edit', $testimonial->id)}}">
                             <span class="btn-label">
                               <i class="fas fa-edit"></i>
                             </span>
@@ -170,7 +137,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form class="mb-3 dm-uploader drag-and-drop-zone modal-form" enctype="multipart/form-data" action="{{route('admin.testimonial.upload')}}" method="POST">
+          <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.testimonial.upload')}}" method="POST">
             <div class="form-row px-2">
               <div class="col-12 mb-2">
                 <label for=""><strong>Image **</strong></label>
@@ -206,19 +173,9 @@
             <p class="text-warning mb-0 mt-2">Upload 70X70 image or squre size image for best quality.</p>
           </form>
 
-          <form id="ajaxForm" class="modal-form" action="{{route('admin.testimonial.store')}}" method="POST">
+          <form id="ajaxForm" class="" action="{{route('admin.testimonial.store')}}" method="POST">
             @csrf
             <input type="hidden" id="image" name="" value="">
-            <div class="form-group">
-                <label for="">Language **</label>
-                <select name="language_id" class="form-control">
-                    <option value="" selected disabled>Select a language</option>
-                    @foreach ($langs as $lang)
-                        <option value="{{$lang->id}}">{{$lang->name}}</option>
-                    @endforeach
-                </select>
-                <p id="errlanguage_id" class="mb-0 text-danger em"></p>
-            </div>
             <div class="form-group">
               <label for="">Comment **</label>
               <textarea class="form-control" name="comment" rows="3" cols="80" placeholder="Enter comment"></textarea>
@@ -234,12 +191,6 @@
               <input type="text" class="form-control" name="rank" value="" placeholder="Enter rank">
               <p id="errrank" class="mb-0 text-danger em"></p>
             </div>
-            <div class="form-group">
-              <label for="">Serial Number **</label>
-              <input type="number" class="form-control ltr" name="serial_number" value="" placeholder="Enter Serial Number">
-              <p id="errserial_number" class="mb-0 text-danger em"></p>
-              <p class="text-warning"><small>The higher the serial number is, the later the testimonial will be shown.</small></p>
-            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -249,48 +200,4 @@
       </div>
     </div>
   </div>
-@endsection
-
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-
-    // make input fields RTL
-    $("select[name='language_id']").on('change', function() {
-
-        $(".request-loader").addClass("show");
-
-        let url = "{{url('/')}}/admin/rtlcheck/" + $(this).val();
-        console.log(url);
-        $.get(url, function(data) {
-            $(".request-loader").removeClass("show");
-            if (data == 1) {
-                $("form.modal-form input").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.modal-form select").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.modal-form textarea").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.modal-form .nicEdit-main").each(function() {
-                    $(this).addClass('rtl text-right');
-                });
-
-            } else {
-                $("form.modal-form input, form.modal-form select, form.modal-form textarea").removeClass('rtl');
-                $("form.modal-form .nicEdit-main").removeClass('rtl text-right');
-            }
-        })
-    });
-});
-</script>
 @endsection

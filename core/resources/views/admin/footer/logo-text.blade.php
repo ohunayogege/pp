@@ -1,25 +1,5 @@
 @extends('admin.layout')
 
-@php
-$selLang = \App\Language::where('code', request()->input('language'))->first();
-@endphp
-@if(!empty($selLang) && $selLang->rtl == 1)
-@section('styles')
-<style>
-    form:not(.modal-form) input,
-    form:not(.modal-form) textarea,
-    form:not(.modal-form) select,
-    select[name='language'] {
-        direction: rtl;
-    }
-    form:not(.modal-form) .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Logo & Text</h4>
@@ -47,36 +27,22 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="card-title">Update Logo & Text</div>
-                </div>
-                <div class="col-lg-2">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-            </div>
+          <div class="card-title">Update Logo & Text</div>
         </div>
         <div class="card-body pt-5 pb-4">
           <div class="row">
             <div class="col-lg-6 offset-lg-3">
-              <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.footer.upload', $lang_id)}}" method="POST">
+              <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.footer.upload')}}" method="POST">
                 <div class="form-row">
                   <div class="col-12 mb-2">
                     <label for=""><strong>Footer Logo **</strong></label>
                   </div>
                   <div class="col-md-12 d-md-block d-sm-none mb-3">
-                        @if (!empty($abs->footer_logo))
-                            <img src="{{asset('assets/front/img/'.$abs->footer_logo)}}" alt="..." class="img-thumbnail">
-                        @else
-                            <img src="{{asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
-                        @endif
+                    @if (file_exists('assets/front/img/footer_logo.jpg'))
+                      <img src="{{asset('assets/front/img/footer_logo.jpg?'.time())}}" alt="..." class="img-thumbnail">
+                    @else
+                      <img src="{{asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
+                    @endif
                   </div>
                   <div class="col-sm-12">
                     <div class="from-group mb-2">
@@ -108,21 +74,21 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
               </form>
 
 
-              <form id="ajaxForm" action="{{route('admin.footer.update', $lang_id)}}" method="post">
+              <form id="ajaxForm" action="{{route('admin.footer.update')}}" method="post">
                 @csrf
                 <div class="form-group">
                   <label for="">Footer Text **</label>
-                  <input type="text" class="form-control" name="footer_text" value="{{$abs->footer_text}}">
+                  <input type="text" class="form-control" name="footer_text" value="{{$bs->footer_text}}">
                   <p id="errfooter_text" class="em text-danger mb-0"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Newsletter Text **</label>
-                  <input type="text" class="form-control" name="newsletter_text" value="{{$abs->newsletter_text}}">
+                  <input type="text" class="form-control" name="newsletter_text" value="{{$bs->newsletter_text}}">
                   <p id="errnewsletter_text" class="em text-danger mb-0"></p>
                 </div>
                 <div class="form-group">
                   <label for="">Copyright Text **</label>
-                  <textarea id="copyright_text" name="copyright_text" class="summernote form-control" data-height="150">{{replaceBaseUrl($abs->copyright_text)}}</textarea>
+                  <textarea id="copyright_text" name="copyright_text" class="nic-edit form-control" rows="8" cols="80">{{$bs->copyright_text}}</textarea>
                   <p id="errcopyright_text" class="em text-danger mb-0"></p>
                 </div>
               </form>

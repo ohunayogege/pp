@@ -1,25 +1,5 @@
 @extends('admin.layout')
 
-@php
-$selLang = \App\Language::where('code', request()->input('language'))->first();
-@endphp
-@if(!empty($selLang) && $selLang->rtl == 1)
-@section('styles')
-<style>
-    form:not(.modal-form) input,
-    form:not(.modal-form) textarea,
-    form:not(.modal-form) select,
-    select[name='language'] {
-        direction: rtl;
-    }
-    form:not(.modal-form) .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Userful Links</h4>
@@ -48,29 +28,13 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
 
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card-title d-inline-block">Userful Links</div>
-                </div>
-                <div class="col-lg-3">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-                <div class="col-lg-4 offset-lg-1 mt-2 mt-lg-0">
-                    <a href="#" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Userful Link</a>
-                </div>
-            </div>
+          <div class="card-title d-inline-block">Userful Links</div>
+          <a href="#" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Userful Link</a>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col-lg-12">
-              @if (count($aulinks) == 0)
+              @if (count($ulinks) == 0)
                 <h3 class="text-center">NO USEFUL LINK FOUND</h3>
               @else
                 <div class="table-responsive">
@@ -84,13 +48,13 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach ($aulinks as $key => $aulink)
+                      @foreach ($ulinks as $key => $ulink)
                         <tr>
                           <td>{{$loop->iteration}}</td>
-                          <td>{{convertUtf8($aulink->name)}}</td>
-                          <td>{{$aulink->url}}</td>
+                          <td>{{$ulink->name}}</td>
+                          <td>{{$ulink->url}}</td>
                           <td>
-                            <a class="btn btn-secondary btn-sm editbtn" href="#editModal" data-toggle="modal" data-ulink_id="{{$aulink->id}}" data-name="{{$aulink->name}}" data-url="{{$aulink->url}}">
+                            <a class="btn btn-secondary btn-sm editbtn" href="#editModal" data-toggle="modal" data-ulink_id="{{$ulink->id}}" data-name="{{$ulink->name}}" data-url="{{$ulink->url}}">
                               <span class="btn-label">
                                 <i class="fas fa-edit"></i>
                               </span>
@@ -98,7 +62,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
                             </a>
                             <form class="deleteform d-inline-block" action="{{route('admin.ulink.delete')}}" method="post">
                               @csrf
-                              <input type="hidden" name="ulink_id" value="{{$aulink->id}}">
+                              <input type="hidden" name="ulink_id" value="{{$ulink->id}}">
                               <button type="submit" class="btn btn-danger btn-sm deletebtn">
                                 <span class="btn-label">
                                   <i class="fas fa-trash"></i>
@@ -132,18 +96,8 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
           </button>
         </div>
         <div class="modal-body">
-          <form id="ajaxForm" class="modal-form create" action="{{route('admin.ulink.store')}}" method="POST">
+          <form id="ajaxForm" class="" action="{{route('admin.ulink.store')}}" method="POST">
             @csrf
-            <div class="form-group">
-                <label for="">Language **</label>
-                <select name="language_id" class="form-control">
-                    <option value="" selected disabled>Select a language</option>
-                    @foreach ($langs as $lang)
-                        <option value="{{$lang->id}}">{{$lang->name}}</option>
-                    @endforeach
-                </select>
-                <p id="errlanguage_id" class="mb-0 text-danger em"></p>
-            </div>
             <div class="form-group">
               <label for="">Name **</label>
               <input type="text" class="form-control" name="name" value="" placeholder="Enter name">
@@ -151,7 +105,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
             </div>
             <div class="form-group">
               <label for="">URL **</label>
-              <input class="form-control ltr" name="url" placeholder="Enter url">
+              <input class="form-control" name="url" placeholder="Enter url">
               <p id="errurl" class="mb-0 text-danger em"></p>
             </div>
           </form>
@@ -175,7 +129,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
           </button>
         </div>
         <div class="modal-body">
-          <form id="ajaxEditForm" action="{{route('admin.ulink.update')}}" method="POST">
+          <form id="ajaxEditForm" class="" action="{{route('admin.ulink.update')}}" method="POST">
             @csrf
             <input id="inulink_id" type="hidden" name="ulink_id" value="">
             <div class="form-group">
@@ -185,7 +139,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
             </div>
             <div class="form-group">
               <label for="">URL **</label>
-              <input id="inurl" class="form-control ltr" name="url" placeholder="Enter url">
+              <input id="inurl" class="form-control" name="url" placeholder="Enter url">
               <p id="eerrurl" class="mb-0 text-danger em"></p>
             </div>
           </form>
@@ -197,45 +151,4 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
       </div>
     </div>
   </div>
-@endsection
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-
-    // make input fields RTL
-    $("select[name='language_id']").on('change', function() {
-        $(".request-loader").addClass("show");
-        let url = "{{url('/')}}/admin/rtlcheck/" + $(this).val();
-        console.log(url);
-        $.get(url, function(data) {
-            $(".request-loader").removeClass("show");
-            if (data == 1) {
-                $("form.create input").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.create select").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.create textarea").each(function() {
-                    if (!$(this).hasClass('ltr')) {
-                        $(this).addClass('rtl');
-                    }
-                });
-                $("form.create .nicEdit-main").each(function() {
-                    $(this).addClass('rtl text-right');
-                });
-
-            } else {
-                $("form.create input, form.create select, form.create textarea").removeClass('rtl');
-                $("form.create .nicEdit-main").removeClass('rtl text-right');
-            }
-        })
-    });
-});
-</script>
 @endsection

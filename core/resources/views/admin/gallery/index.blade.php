@@ -1,25 +1,5 @@
 @extends('admin.layout')
 
-@php
-$selLang = \App\Language::where('code', request()->input('language'))->first();
-@endphp
-@if(!empty($selLang) && $selLang->rtl == 1)
-@section('styles')
-<style>
-    form:not(.modal-form) input,
-    form:not(.modal-form) textarea,
-    form:not(.modal-form) select,
-    select[name='language'] {
-        direction: rtl;
-    }
-    form:not(.modal-form) .note-editor.note-frame .note-editing-area .note-editable {
-        direction: rtl;
-        text-align: right;
-    }
-</style>
-@endsection
-@endif
-
 @section('content')
   <div class="page-header">
     <h4 class="page-title">Gallery Images</h4>
@@ -42,25 +22,8 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
 
       <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card-title d-inline-block">Gallery Images</div>
-                </div>
-                <div class="col-lg-3">
-                    @if (!empty($langs))
-                        <select name="language" class="form-control" onchange="window.location='{{url()->current() . '?language='}}'+this.value">
-                            <option value="" selected disabled>Select a Language</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{$lang->code}}" {{$lang->code == request()->input('language') ? 'selected' : ''}}>{{$lang->name}}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-                <div class="col-lg-4 offset-lg-1 mt-2 mt-lg-0">
-                    <a href="#" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Image</a>
-                    <button class="btn btn-danger float-right btn-sm mr-2 d-none bulk-delete" data-href="{{route('admin.gallery.bulk.delete')}}"><i class="flaticon-interface-5"></i> Delete</button>
-                </div>
-            </div>
+          <div class="card-title d-inline-block">Gallery Images</div>
+          <a href="#" class="btn btn-primary float-right" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Add Image</a>
         </div>
         <div class="card-body">
           <div class="row">
@@ -72,26 +35,20 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
                   <table class="table table-striped mt-3">
                     <thead>
                       <tr>
-                        <th scope="col">
-                            <input type="checkbox" class="bulk-check" data-val="all">
-                        </th>
+                        <th scope="col">#</th>
                         <th scope="col">Image</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Serial Number</th>
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       @foreach ($galleries as $key => $gallery)
                         <tr>
-                          <td>
-                            <input type="checkbox" class="bulk-check" data-val="{{$gallery->id}}">
-                          </td>
+                          <td>{{$loop->iteration}}</td>
                           <td><img src="{{asset('assets/front/img/gallery/'.$gallery->image)}}" alt="" width="80"></td>
-                          <td>{{convertUtf8(strlen($gallery->title)) > 70 ? convertUtf8(substr($gallery->title, 0, 70)) . '...' : convertUtf8($gallery->title)}}</td>
-                          <td>{{$gallery->serial_number}}</td>
+                          <td>{{strlen($gallery->title) > 70 ? substr($gallery->title, 0, 70) . '...' : $gallery->title}}</td>
                           <td>
-                            <a class="btn btn-secondary btn-sm" href="{{route('admin.gallery.edit', $gallery->id) . '?language=' . request()->input('language')}}">
+                            <a class="btn btn-secondary btn-sm" href="{{route('admin.gallery.edit', $gallery->id)}}">
                             <span class="btn-label">
                               <i class="fas fa-edit"></i>
                             </span>
@@ -120,7 +77,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
         <div class="card-footer">
           <div class="row">
             <div class="d-inline-block mx-auto">
-              {{$galleries->appends(['language' => request()->input('language')])->links()}}
+              {{$galleries->links()}}
             </div>
           </div>
         </div>
@@ -140,7 +97,7 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
           </button>
         </div>
         <div class="modal-body">
-          <form class="mb-3 dm-uploader drag-and-drop-zone modal-form" enctype="multipart/form-data" action="{{route('admin.gallery.upload')}}" method="POST">
+          <form class="mb-3 dm-uploader drag-and-drop-zone" enctype="multipart/form-data" action="{{route('admin.gallery.upload')}}" method="POST">
             <div class="form-row px-2">
               <div class="col-12 mb-2">
                 <label for=""><strong>Image **</strong></label>
@@ -175,29 +132,13 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
             </div>
           </form>
 
-          <form id="ajaxForm" class="modal-form" action="{{route('admin.gallery.store')}}" method="POST">
+          <form id="ajaxForm" class="" action="{{route('admin.gallery.store')}}" method="POST">
             @csrf
             <input type="hidden" id="image" name="" value="">
-            <div class="form-group">
-                <label for="">Language **</label>
-                <select name="language_id" class="form-control">
-                    <option value="" selected disabled>Select a language</option>
-                    @foreach ($langs as $lang)
-                        <option value="{{$lang->id}}">{{$lang->name}}</option>
-                    @endforeach
-                </select>
-                <p id="errlanguage_id" class="mb-0 text-danger em"></p>
-            </div>
             <div class="form-group">
               <label for="">Title **</label>
               <input type="text" class="form-control" name="title" placeholder="Enter title" value="">
               <p id="errtitle" class="mb-0 text-danger em"></p>
-            </div>
-            <div class="form-group">
-              <label for="">Serial Number **</label>
-              <input type="number" class="form-control ltr" name="serial_number" value="" placeholder="Enter Serial Number">
-              <p id="errserial_number" class="mb-0 text-danger em"></p>
-              <p class="text-warning"><small>The higher the serial number is, the later the image will be shown.</small></p>
             </div>
           </form>
         </div>
@@ -208,46 +149,4 @@ $selLang = \App\Language::where('code', request()->input('language'))->first();
       </div>
     </div>
   </div>
-@endsection
-
-@section('scripts')
-  <script>
-    $(document).ready(function() {
-
-        // make input fields RTL
-        $("select[name='language_id']").on('change', function() {
-            $(".request-loader").addClass("show");
-            let url = "{{url('/')}}/admin/rtlcheck/" + $(this).val();
-            console.log(url);
-            $.get(url, function(data) {
-                $(".request-loader").removeClass("show");
-                if (data == 1) {
-                    $("form input").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form select").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form textarea").each(function() {
-                        if (!$(this).hasClass('ltr')) {
-                            $(this).addClass('rtl');
-                        }
-                    });
-                    $("form .nicEdit-main").each(function() {
-                        $(this).addClass('rtl text-right');
-                    });
-
-                } else {
-                    $("form input, form select, form textarea").removeClass('rtl');
-                    $("form .nicEdit-main").removeClass('rtl text-right');
-                }
-            })
-        });
-
-    });
-  </script>
 @endsection

@@ -1,17 +1,25 @@
-@extends("front.$version.layout")
-
-@section('pagename')
- - {{__('Contact Us')}}
-@endsection
-
-@section('meta-keywords', "$be->contact_meta_keywords")
-@section('meta-description', "$be->contact_meta_description")
-
-@section('breadcrumb-title', $bs->contact_title)
-@section('breadcrumb-subtitle', $bs->contact_subtitle)
-@section('breadcrumb-link', __('Contact Us'))
+@extends('front.layout')
 
 @section('content')
+  <!--   breadcrumb area start   -->
+  <div class="breadcrumb-area contact">
+     <div class="container">
+        <div class="breadcrumb-txt">
+           <div class="row">
+              <div class="col-xl-7 col-lg-8 col-sm-10">
+                 <span>{{$bs->contact_title}}</span>
+                 <h1>{{$bs->contact_subtitle}}</h1>
+                 <ul class="breadcumb">
+                    <li><a href="{{route('front.index')}}">{{__('Home')}}</a></li>
+                    <li>{{__('Contact Us')}}</li>
+                 </ul>
+              </div>
+           </div>
+        </div>
+     </div>
+     <div class="breadcrumb-area-overlay"></div>
+  </div>
+  <!--   breadcrumb area end    -->
 
 
   <!--    contact form and map start   -->
@@ -19,8 +27,8 @@
      <div class="container">
         <div class="row">
            <div class="col-lg-6">
-              <span class="section-title">{{convertUtf8($bs->contact_form_title)}}</span>
-              <h2 class="section-summary">{{convertUtf8($bs->contact_form_subtitle)}}</h2>
+              <span class="section-title">{{$bs->contact_form_title}}</span>
+              <h2 class="section-summary">{{$bs->contact_form_subtitle}}</h2>
               <form action="{{route('front.sendmail')}}" class="contact-form" method="POST">
                  @csrf
                  <div class="row">
@@ -57,16 +65,15 @@
                        @endif
                     </div>
                     @if ($bs->is_recaptcha == 1)
-                        <div class="col-lg-12 mb-4">
-                            {!! NoCaptcha::renderJs() !!}
-                            {!! NoCaptcha::display() !!}
-                            @if ($errors->has('g-recaptcha-response'))
-                            @php
-                                $errmsg = $errors->first('g-recaptcha-response');
-                            @endphp
-                            <p class="text-danger mb-0">{{__("$errmsg")}}</p>
-                            @endif
+                      <div class="col-md-12">
+                        <div class="form-element reduced-mb">
+                          {!! NoCaptcha::renderJs() !!}
+                          {!! NoCaptcha::display() !!}
                         </div>
+                        @if ($errors->has('g-recaptcha-response'))
+                          <p class="text-danger mb-4">{{$errors->first('g-recaptcha-response')}}</p>
+                        @endif
+                      </div>
                     @endif
 
                     <div class="col-md-12">
@@ -85,19 +92,19 @@
                        <div class="icon-wrapper">
                           <i class="fa fa-home"></i>
                        </div>
-                       <p>{{convertUtf8($bs->contact_address)}}</p>
+                       <p>{{$bs->contact_address}}</p>
                     </div>
                     <div class="single-contact-info">
                        <div class="icon-wrapper">
                           <i class="fa fa-phone"></i>
                        </div>
-                       <p>{{convertUtf8($bs->contact_number)}}</p>
+                       <p>{{$bs->contact_number}}</p>
                     </div>
                     <div class="single-contact-info">
                        <div class="icon-wrapper">
                           <i class="fa fa-envelope"></i>
                        </div>
-                       <p>{{convertUtf8($be->to_mail)}}</p>
+                       <p>{{$bs->contact_mail}}</p>
                     </div>
                  </div>
               </div>
